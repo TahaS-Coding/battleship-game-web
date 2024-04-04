@@ -75,18 +75,56 @@ document.addEventListener(`DOMContentLoaded`, function() {
     }
 });
 
-function ShipRNG() {
-    let shipCoord = [];
-    // Keeps track of coordinate that have already been taken
-    let random = (Math.floor(Math.random()*100));
-    if(random > 20) {
-        random - 20
-    } else {
-        console.log(random) 
+function rng() {
+    let rng = Math.floor(Math.random() * 100);
+    // Generates a number 0 - 99
+    do {
+        rng += rng;
+    } while (rng <= 0)
+    // This loops runs until rng is not a zero
+    // We want to generate a number from 1 - 20
+
+
+    // This is a loops that subtracts 20 if the number is over 20
+    // The loop will stop if it is 20 or less
+    if (rng > 20) {
+        do {
+            rng = rng - 20;
+        } while (rng > 20);
+
+
+       console.log(rng);
     }
-    console.log(random)
+    else {
+       console.log(rng);
+    }
 }
 
 
 
-ShipRNG()
+
+class ship {
+    constructor() {
+        this.x = [0];
+    }
+
+
+    get xCoord() {
+        return this.x;
+    }
+}
+
+
+
+
+let ship1 = new ship();
+console.log(ship1.xCoord)
+
+
+
+
+function coordinate(nShips) {
+    let n = nShips;
+    // Number of ships
+    let
+}
