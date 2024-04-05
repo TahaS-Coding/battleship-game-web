@@ -28,29 +28,48 @@ function rng() {
 
 
 class ship {
-    constructor() {
-        this.x = [0];
+    constructor(d,coord, newCoord) {
+        this.direction = d;
+        this.length = 5;
+        this.oldCoord = coord;
+        this.newCoord = newCoord;
     }
 
+    get long() {
+        return this.long;
+    }
 
-    get xCoord() {
-        return this.x;
+    get nCoord() {
+        return this.newCoord;
+    }
+
+    get oCoord() {
+        return this.oldCoord;
     }
 }
 
-
-
-
-let ship1 = new ship();
-console.log(ship1.xCoord)
-
-
-
-
-function coordinate(nShips) {
-    let n = nShips;
-    // Number of ships
-    let ship1 = new ship();
-    console.log(ship1.xCoord)
+// This function uses the number generator to decide what direction the ships is going
+function direction() {
+    let d = rng();
+    if (d <= 5) {
+        return `up`;
+    } else if (d <= 10) {
+        return `down`;
+    } else if (d <=15) {
+        return `left`;
+    } else {
+        return `right`;
+    }
 }
-coordinate()
+
+// console.log(direction())
+
+function coordinate(length) {
+    let l = length;
+    // Length of ship
+    let x = rng()
+    let y = rng()
+    return [`x` + x + `y` + y];
+}
+let ship1 = new ship(direction(),coordinate(ship.long));
+console.log(ship1)
