@@ -9,21 +9,39 @@ document.addEventListener(`DOMContentLoaded`, function() {
             let newSquare = document.createElement("button");
             newSquare.setAttribute("id", sqrID);
             newSquare.classList.add("squares");
+              // detects if square has a ship on it
             newSquare.addEventListener("click", function(){
+                // gets coordinates of clicked square
+                let clickedSqrID = this.getAttribute("id");
+                let splitID = this.getAttribute("id").split('');
+                let sqrXCoord = null;
+                let sqrYCoord = null;
+                for (let char of splitID){
+                    if (typeof char == "number" && sqrXCoord == null){
+                        sqrXCoord = Number(char);
+                    }
+                    else if(typeof char == "number" && sqrXCoord != null){
+                        sqrYCoord = Number(char);
+                    }
+                }
+                // sees if ship is on that coordinate
                 for(let ship of shipList){
-                    if(this.getAttribute("id") == `x${ship.xCoord}y${ship.yCoord}`){
-                        // if (ship.rotation == "horizontal"){
-                        //     for (let i = 0; i < ship.xCoord; i++){
-                                
-                        //     }
-                        //     for (let i = 0; i < ship.yCoord; i++){
-                                
-                        //     }
-                        // }
-                        console.log("Hit SHip");
+                    if(ship.rotation == "horizontal"){
+                        for(let i = sqrXCoord; i > sqrXCoord - ship.size; i--){
+                            if(clickedSqrID == `x${i}y${ship.yCoord}`){
+                                console.log("Hit ship");
+                            }
+                        }
+                    }
+                    else if(ship.rotation == "vertical"){
+                        for(let i = sqrYCoord; i < sqrYCoord + ship.size; i++){
+                            if(clickedSqrID == `x${ship.xCoord}y${i}`){
+                                console.log("Hit ship");
+                            }
+                        }
                     }
                     else{
-                        console.log("No ship has been hit");
+                        console.log("No ship hit");
                     }
                 }
             })
@@ -35,42 +53,19 @@ document.addEventListener(`DOMContentLoaded`, function() {
 
     class AircraftCarrier{
         constructor(){
-            this.xSize = 5;
-            this.ySize = 2;
-            this.xCoord = 2;
-            this.yCoord = 2;
+            this.size = 5;
+            this.xCoord = 8;
+            this.yCoord = 10;
             this.rotation = "horizontal";
         }
-
-        
     }
-    let shipList = [new AircraftCarrier()]
     class Destroyer{
         constructor(){
-            this.xSize = 4;
-            this.ySize = 1;
+            this.size = 4;
+            this.xCoord = 15;
+            this.yCoord = 15;
+            this.rotation = "vertical";
         }
-
     }
-    class Cruiser{
-        constructor(){
-            this.xSize = 2;
-            this.ySize = 1;
-        }
-
-    }
-    class Battleship{
-        constructor(){
-            this.xSize = 4;
-            this.ySize = 1;
-        }
-
-    }
-    class Submarine{
-        constructor(){
-            this.xSize = 3;
-            this.ySize = 1;
-        }
-
-    }
+    let shipList = [new AircraftCarrier(), new Destroyer()];
 });
