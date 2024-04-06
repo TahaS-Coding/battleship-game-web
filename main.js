@@ -15,7 +15,6 @@ document.addEventListener(`DOMContentLoaded`, function() {
                 let splitID = clickedSqrID.match(/\d+/g);
                 let sqrXCoord = null;
                 let sqrYCoord = null;
-                console.log(splitID);
                 for (let char of splitID){
                     let num = Number(char);
                     if (sqrXCoord == null){
@@ -25,18 +24,16 @@ document.addEventListener(`DOMContentLoaded`, function() {
                         sqrYCoord = num;
                     }
                 }
-                console.log(sqrXCoord);
-                console.log(sqrYCoord);
                 // sees if ship is on that coordinate
                 for(let ship of shipList){
                     if(ship.rotation == "horizontal" && ship.yCoord == sqrYCoord){
                         if (sqrXCoord <= ship.xCoord && sqrXCoord > ship.xCoord - ship.size){
-                            console.log("hit carrier");
+                            alert(`hit carrier at (${clickedSqrID})`);
                         }
                     }
                     else if(ship.rotation == "vertical" && ship.xCoord == sqrXCoord){
                         if (sqrYCoord >= ship.yCoord && sqrYCoord < ship.yCoord + ship.size){
-                            console.log("hit destroyer");
+                            alert(`hit destroyer at (${clickedSqrID})`);
                         }
                     }
                 }

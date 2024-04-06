@@ -1,12 +1,26 @@
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-
 }
 
-/* .squares {
-    
-} */
+#gameBoardOverlay{
+    display: flex;
+    flex-flow: row wrap;
+    width: 50%;
+    margin: auto;
+    height: 50vh;
+}
+#gameBoardOverlay button{
+    width: 5%;
+    border: solid 1px black;
+}
+#gameBoardOverlay button:hover{
+    background-color: rgb(70, 70, 70);
+}
+
+
+
 
 
 .hidden{
