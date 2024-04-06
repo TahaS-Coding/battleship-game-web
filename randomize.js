@@ -27,24 +27,17 @@ function rng() {
 
 
 
-class ship {
-    constructor(d,coord, newCoord) {
+class Ship {
+    constructor(health,length,d,coord, newCoord) {
+        this.health = health;
+        this.length = length;
         this.direction = d;
-        this.length = 5;
         this.oldCoord = coord;
         this.newCoord = newCoord;
     }
 
     get long() {
-        return this.long;
-    }
-
-    get nCoord() {
-        return this.newCoord;
-    }
-
-    get oCoord() {
-        return this.oldCoord;
+        return 1;
     }
 }
 
@@ -62,14 +55,27 @@ function direction() {
     }
 }
 
-// console.log(direction())
+
+// Avoid repeating by using class
+// health, length, movement speed, directon, old coordinate, new coordinate 
+let battleship = new Ship(5,5,direction(),coordinate(5),hey());
+
+
+console.log(battleship)
+console.log(battleship.oldCoord)
+
 
 function coordinate(length) {
+   
     let l = length;
+    console.log(l)
     // Length of ship
     let x = rng()
     let y = rng()
     return [`x` + x + `y` + y];
+   
 }
-let ship1 = new ship(direction(),coordinate(ship.long));
-console.log(ship1)
+
+function hey(){
+    return `hi`
+}
