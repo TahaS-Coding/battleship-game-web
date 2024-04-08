@@ -46,6 +46,7 @@ document.addEventListener(`DOMContentLoaded`, function() {
 
     class AircraftCarrier{
         constructor(){
+            this.name = "aircraftcarrier";
             this.size = 5;
             this.xCoord = 8;
             this.yCoord = 10;
@@ -54,6 +55,7 @@ document.addEventListener(`DOMContentLoaded`, function() {
     }
     class Destroyer{
         constructor(){
+            this.name = "destroyer";
             this.size = 4;
             this.xCoord = 15;
             this.yCoord = 15;
@@ -61,4 +63,29 @@ document.addEventListener(`DOMContentLoaded`, function() {
         }
     }
     let shipList = [new AircraftCarrier(), new Destroyer()];
+
+    function rNG(){
+        return Math.floor((Math.random() * 20) + 1);
+    }
+    
+    for (let ship of shipList) {
+        if (ship.rotation == "horizontal") {
+            ship.xCoord = rNG();
+            while (ship.xCoord < ship.size) {
+                ship.xCoord = rNG();
+            }
+            ship.yCoord = rNG();
+        }
+        else if(ship.rotation == "vertical"){
+            ship.yCoord = rNG();
+            while (ship.yCoord > 20 - ship.size){
+                ship.yCoord = rNG();
+            }
+            ship.xCoord = rNG();
+        }
+    }
+
+    for (let ship of shipList){
+        console.log(`the ${ship.name}'s coordinates are (${ship.xCoord}, ${ship.yCoord}) `)
+    }
 });
