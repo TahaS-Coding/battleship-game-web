@@ -7,17 +7,12 @@ function rng() {
     return (rng);
 }
 
-
-
-
 let shipCoordinate = [];
 // Keeps track of coordinate that have already been taken
 // Use this to check if ship is hit
 // Maybe we are going to need two for each player
 let shipHit = [];
 // Keeps track ships hit
-
-
 
 
 // This is going to be used to create new ship
@@ -34,16 +29,6 @@ class Ship {
 }
 
 
-
-
-
-
-
-
-
-
-
-
 // Create new following the instruction
 // name, health, length, movement speed
 let battleship = new Ship(`Battleship`, 8, 8, 3);
@@ -53,19 +38,8 @@ let shipLists = [battleship, cruiser]
 
 
 
-
-
-
-
-
 // console.log(battleship.health -= 1)
 // console.log(battleship)
-
-
-
-
-
-
 
 
 // This function uses the number generator to decide what direction the ships is going
@@ -82,9 +56,6 @@ function generateDirection() {
         return `right`;
     }
 }
-
-
-
 
 // Determines the ship orientation
 // up and down = vertical
@@ -106,8 +77,6 @@ function ori(d) {
             return `vertical`;
     }
 }
-
-
 
 
 // Add x or y
@@ -135,8 +104,6 @@ function ori(d) {
 // console.log(shipCoordinate)
 
 
-
-
 function moveAxis(name, dir, length, x, y) {
 
 
@@ -154,28 +121,13 @@ function moveAxis(name, dir, length, x, y) {
             // Sub(name, length, y, x)
             break;
     }
-
-
-
-
 }
-
-
-
-
-
-
-
 
 function generateCoordinate(n, c, l, d) {
     // n is ship name
     // c is the coordinate
     // l is the length of the ship
     // d is the direction
-
-
-
-
     let x = rng()
     let y = rng()
     moveAxis(n, d, l, x, y)
@@ -184,28 +136,10 @@ function generateCoordinate(n, c, l, d) {
     shipCoordinate.push(result);
     // console.log(result)
     return result;
-
-
-
-
 }
-
-
-
-
-
-
-
 
 // let bc = (battleship.coordinate)
 // bc.push(generateCoordinate())
-
-
-
-
-
-
-
 
 // console.log(battleship.coordinate)
 function coordinate() {
@@ -213,10 +147,6 @@ function coordinate() {
         let length = element.length;
         let direction = element.direction;
         let coordinate = element.coordinate;
-
-
-
-
         if (coordinate.length === 0) {
             generateCoordinate(element, coordinate, length, direction)
             // console.log(shipCoordinate)
@@ -236,11 +166,6 @@ function coordinate() {
 coordinate()
 // this function is going to be called at the start of the game and every round
 // the direction function is also going to be called every round
-
-
-
-
-
 
 
 
@@ -303,19 +228,19 @@ function checkCoord() {
         let checked = `undefined`;
         for (let coord of checking) {
             let c = notAvailable.indexOf(coord)
-            if (c > 0) {
+            if (c >= 0) {
                 checked = `Not Available`;
-                console.log(`Not Available`)
+                break;
             } else {
                 checked = `true`;
             }
         }
+        console.log(checked)
         if (checked === `true`) {
-            for (let coord of checking) { 
+            for (let coord of checking) {
                 notAvailable.push(coord);
             }
-        } else if(checked === `Not Available`){
-            notAvailable.push(`hi`)
+        } else if (checked === `Not Available`) {
         }
 
     }

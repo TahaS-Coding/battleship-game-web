@@ -25,20 +25,23 @@ document.addEventListener(`DOMContentLoaded`, function () {
                     }
                 }
                 // Shows coord in console.log() when hovering squares
-                newSquare.addEventListener("mouseover", function(){
+                newSquare.addEventListener("mouseover", function () {
                     let spanCoord = newSquare.getAttribute("id");
                     console.log(spanCoord)
                 })
 
                 // sees if ship is on that coordinate
                 for (let ship of shipList) {
+                    let health = ship.health;
                     if (ship.rotation == "horizontal" && ship.yCoord == sqrYCoord) {
                         if (sqrXCoord <= ship.xCoord && sqrXCoord > ship.xCoord - ship.size) {
+                            health--;
                             alert(`hit carrier at (${clickedSqrID})`);
                         }
                     }
                     else if (ship.rotation == "vertical" && ship.xCoord == sqrXCoord) {
                         if (sqrYCoord <= ship.yCoord && sqrYCoord > ship.yCoord - ship.size) {
+                            health--;
                             alert(`hit destroyer at (${clickedSqrID})`);
                         }
                     }
@@ -53,21 +56,21 @@ document.addEventListener(`DOMContentLoaded`, function () {
     class AircraftCarrier {
         constructor() {
             this.name = "AircraftCarrier";
+            this.health = 6;
             this.size = 5;
             this.xCoord = undefined;
             this.yCoord = undefined;
             this.rotation = "horizontal";
-            this.occupiedSquares = undefined;
         }
     }
     class Destroyer {
         constructor() {
             this.name = "Destroyer";
+            this.health = 4;
             this.size = 4;
             this.xCoord = undefined;
             this.yCoord = undefined;
             this.rotation = "vertical";
-            this.occupiedSquares = undefined;
         }
     }
     let shipList = [new AircraftCarrier(), new Destroyer()];
@@ -81,7 +84,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         // It actually generating a 0 - 19, so adding 1 solves the problem
         return (rng);
     }
-    function randomCoords(inputShip){
+    function randomCoords(inputShip) {
         if (inputShip.rotation == "horizontal") {
             inputShip.xCoord = rng();
             while (inputShip.xCoord < inputShip.size) {
@@ -97,22 +100,67 @@ document.addEventListener(`DOMContentLoaded`, function () {
             inputShip.xCoord = rng();
         }
     }
-    for (let ship of shipList) {
-        randomCoords(ship);
-        if(ship.rotation)
-        ship.occupiedSquares = [[ship.xCoord, ship.yCoord]];
-        for (let i = 0; i < shipList.length; i++){
-            let shipCoordinate = shipList[i].occupiedSquares;
-            if (ship.occupiedSquares[0] == shipCoordinate[0] && ship.occupiedSquares[1] == shipCoordinate[1]){
-                randomCoords(ship);
-                i = 0;
+
+    function checkCoord() {
+        let notAvailable = [];
+        for (let ship of shipList) {
+            randomCoords(ship);
+            let checking = [];
+            let name = ship.name;
+            let xAxis = ship.xCoord;
+            let yAxis = ship.yCoord;
+            let size = ship.size;
+            let rotation = ship.rotation;
+            if (rotation == `horizontal`) {
+                let coordinateList = Sub(size, xAxis, yAxis, `x`);
+                for (let coord of coordinateList) {
+                    checking.push(coord);
+                }
+            } else if (rotation == `vertical`) {
+                let coordinateList = Sub(size, yAxis, xAxis, `y`);
+                for (let coord of coordinateList) {
+                    checking.push(coord);
+                }
             }
+            console.log(name, xAxis, yAxis, rotation, size)
+            console.log(checking)
+            let checked = `undefined`;
+            for (let coord of checking) {
+                let c = notAvailable.indexOf(coord)
+                if (c >= 0) {
+                    checked = `Not Available`;
+                    break;
+                } else {
+                    checked = `true`;
+                }
+            }
+            console.log(checked)
+            if (checked === `true`) {
+                for (let coord of checking) {
+                    notAvailable.push(coord);
+                }
+            } else if (checked === `Not Available`) {
+            }
+
         }
+        console.log(notAvailable)
     }
-    for (let ship of shipList) {
-        console.log(`the ${ship.name}'s coordinates are (${ship.xCoord}, ${ship.yCoord}) `)
+    checkCoord();
+    // Subtract x or y  
+    function Sub(length, axis, otherAxis, xy) {
+        axis++;
+        // This axis++ makes sure that it starts at the right axis
+        let i = 0;
+        let result = [];
+        while (i < length) {
+            i++;
+            axis--;
+            if (xy == `x`) {
+                result.push(`x${axis}y${otherAxis}`);
+            } else if (xy == `y`) {
+                result.push(`x${otherAxis}y${axis}`);
+            }
+        };
+        return result;
     }
-
-
-    
 });
