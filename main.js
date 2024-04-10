@@ -10,7 +10,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             newSquare.setAttribute("id", sqrID);
             newSquare.classList.add("squares");
             newSquare.addEventListener("click", function () {
-                // gets coordinates of clicked square
+                // Gets coordinates of clicked square
                 let clickedSqrID = this.getAttribute("id");
                 let splitID = clickedSqrID.match(/\d+/g);
                 let sqrXCoord = null;
@@ -27,10 +27,10 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 // Shows coord in console.log() when hovering squares
                 newSquare.addEventListener("mouseover", function () {
                     let spanCoord = newSquare.getAttribute("id");
-                    console.log(spanCoord)
+                    console.log(spanCoord);
                 })
 
-                // sees if ship is on that coordinate
+                // Sees if ship is on that coordinate
                 for (let ship of shipList) {
                     let health = ship.health;
                     if (ship.rotation == "horizontal" && ship.yCoord == sqrYCoord) {
@@ -48,7 +48,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 }
             });
             gameBoardOverlay.appendChild(newSquare);
-            //creates a map for gameboard squares 
+            //Creates a map for gameboard squares 
             gameBoard.set(`${sqrID}`, {});
         }
     }
@@ -58,6 +58,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             this.name = "AircraftCarrier";
             this.health = 6;
             this.size = 5;
+            this.speed = 4;
             this.xCoord = undefined;
             this.yCoord = undefined;
             this.rotation = "horizontal";
@@ -68,6 +69,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             this.name = "Destroyer";
             this.health = 4;
             this.size = 4;
+            this.speed = 3;
             this.xCoord = undefined;
             this.yCoord = undefined;
             this.rotation = "vertical";
@@ -85,6 +87,8 @@ document.addEventListener(`DOMContentLoaded`, function () {
         return (rng);
     }
     function randomCoords(inputShip) {
+        // Generates a coordinate based on the orientation of the ship
+        // It makes sure that the ships' coordinates will generate outside the grid
         if (inputShip.rotation == "horizontal") {
             inputShip.xCoord = rng();
             while (inputShip.xCoord < inputShip.size) {
@@ -101,18 +105,25 @@ document.addEventListener(`DOMContentLoaded`, function () {
         }
     }
 
+    // CheckCoord() will be called every round to make sure that the ship won't move off the grid
     function checkCoord() {
+        // Keeps track of coordinate that have been taken
         let notAvailable = [];
         for (let ship of shipList) {
             randomCoords(ship);
+            // randomCoords() should be called once at the start of the game
             let checking = [];
+            // A temporary array of coordinates
             let name = ship.name;
             let xAxis = ship.xCoord;
             let yAxis = ship.yCoord;
             let size = ship.size;
             let rotation = ship.rotation;
+            // Check the ship rotation, based on the ship rotation the x or y axis will have to change while the axis will stay constant
             if (rotation == `horizontal`) {
                 let coordinateList = Sub(size, xAxis, yAxis, `x`);
+                // Sub will generate an array of coordinates
+                // The loop will push the new coordinates into a temporary array
                 for (let coord of coordinateList) {
                     checking.push(coord);
                 }
@@ -122,29 +133,30 @@ document.addEventListener(`DOMContentLoaded`, function () {
                     checking.push(coord);
                 }
             }
-            console.log(name, xAxis, yAxis, rotation, size)
-            console.log(checking)
-            let checked = `undefined`;
+            // console.log(name, xAxis, yAxis, rotation, size)
+            // console.log(checking)
+            let result = undefined;
             for (let coord of checking) {
-                let c = notAvailable.indexOf(coord)
-                if (c >= 0) {
-                    checked = `Not Available`;
+                let check = notAvailable.indexOf(coord);
+                if (check >= 0) {
+                    result = false;
+                    checkCoord();
                     break;
                 } else {
-                    checked = `true`;
+                    result = true;
                 }
             }
-            console.log(checked)
-            if (checked === `true`) {
+            if (result === true) {
                 for (let coord of checking) {
                     notAvailable.push(coord);
                 }
-            } else if (checked === `Not Available`) {
+            } else {
+                
             }
 
         }
-        console.log(notAvailable)
-    }
+        // console.log(notAvailable)
+    }             
     checkCoord();
     // Subtract x or y  
     function Sub(length, axis, otherAxis, xy) {
@@ -156,8 +168,10 @@ document.addEventListener(`DOMContentLoaded`, function () {
             i++;
             axis--;
             if (xy == `x`) {
+                // Subtracts 1 from x coordinate and y stays constant
                 result.push(`x${axis}y${otherAxis}`);
             } else if (xy == `y`) {
+                // Subtracts 1 from y coordinate and x stays constant
                 result.push(`x${otherAxis}y${axis}`);
             }
         };
