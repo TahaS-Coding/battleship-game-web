@@ -179,28 +179,27 @@
 class AircraftCarrier {
     constructor() {
         this.name = "AircraftCarrier";
-        this.health = 6;
         this.size = 5;
-        this.speed = 4;
+        this.speed = 5;
         this.xCoord = undefined;
         this.yCoord = undefined;
         this.direction = generateDirection();
-        this.rotation = Orientation(this.direction);
+        this.rotation = rotation(this.direction);
     }
 }
 class Destroyer {
     constructor() {
         this.name = "Destroyer";
-        this.health = 4;
         this.size = 4;
-        this.speed = 3;
+        this.speed = 4;
         this.xCoord = undefined;
         this.yCoord = undefined;
         this.direction = generateDirection();
-        this.rotation = Orientation(this.direction);
+        this.rotation = rotation(this.direction);
     }
 }
-let shipList = [new AircraftCarrier(), new Destroyer(), new Destroyer()];
+let shipList = [new AircraftCarrier(), new Destroyer()];
+
 
 // This function uses the number generator to decide what direction the ships is going
 // Going to need to check if direction is available
@@ -217,29 +216,34 @@ function generateDirection() {
     }
 }
 
-function Orientation(d) {
+// Determines the ship orientation
+// up and down = vertical
+// left and right = horizontal
+// I forgot why I made this
+function rotation(d) {
     switch (d) {
         case (`left`):
+            // console.log(`horizontal`)
             return `horizontal`;
         case (`right`):
+            // console.log(`horizontal`)
             return `horizontal`;
         case (`up`):
+            // console.log(`vertical`)
             return `vertical`;
         case (`down`):
+            // console.log(`vertical`)
             return `vertical`;
     }
 }
 
+// generates random number 1 - 20
 function rng() {
-    let rng = Math.floor((Math.random() * 5) + 1);
-    // Generates a number 1 - 20  
-    // The 20 makes it generate a number less than 20
-    // It actually generating a 0 - 19, so adding 1 solves the problem
-    return (rng);
+    let rng = Math.floor((Math.random() * 20) + 1);
+    return rng;
 }
-function randomCoords(inputShip) {
-    // Generates a coordinate based on the orientation of the ship
-    // It makes sure that the ships' coordinates will generate outside the grid
+// Generates a random coordinate for the ship, makes sure ship does not escape grid
+function randomCoord(inputShip) {
     if (inputShip.rotation == "horizontal") {
         inputShip.xCoord = rng();
         while (inputShip.xCoord < inputShip.size) {
@@ -255,106 +259,82 @@ function randomCoords(inputShip) {
         inputShip.xCoord = rng();
     }
 }
-
-// Subtract x or y  
-function Sub(length, axis, otherAxis, xy) {
-    axis++;
-    // This axis++ makes sure that it starts at the right axis
-    let i = 0;
-    let result = [];
-    while (i < length) {
-        i++;
-        axis--;
-        if (xy == `x`) {
-            // Subtracts 1 from x coordinate and y stays constant
-            result.push(`x${axis}y${otherAxis}`);
-        } else if (xy == `y`) {
-            // Subtracts 1 from y coordinate and x stays constant
-            result.push(`x${otherAxis}y${axis}`);
-        }
-    };
-    return result;
-}
-
-function generateNewCoord(ship) {
-    randomCoords(ship);
-    // randomCoords() should be called once at the start of the game
-    let checking = [];
-    // A temporary array of coordinates
-    let name = ship.name;
-    let xAxis = ship.xCoord;
-    let yAxis = ship.yCoord;
-    let size = ship.size;
-    let rotation = ship.rotation;
-    // Check the ship rotation, based on the ship rotation the x or y axis will have to change while the axis will stay constant
-    if (rotation == `horizontal`) {
-        let coordinateList = Sub(size, xAxis, yAxis, `x`);
-        // Sub will generate an array of coordinates
-        // The loop will push the new coordinates into a temporary array
-        for (let coord of coordinateList) {
-            checking.push(coord);
-        }
-    } else if (rotation == `vertical`) {
-        let coordinateList = Sub(size, yAxis, xAxis, `y`);
-        for (let coord of coordinateList) {
-            checking.push(coord);
-        }
-    }
-    return checking;
-}
-
-// CheckCoord() will be called every round to make sure that the ship won't move off the grid
-function checkCoord() {
-    // Keeps track of coordinate that have been taken
-    let notAvailable = [];
+// returns true if no Coordinates overlap, false if any Coordinates do
+function checkCoordValidity() {
+    let allOccupiedSquares = [];
+    // for loop pushes coordinates for all squares covered by each ship to the allOccupiedSquares array, unless coordinate values undefined
     for (let ship of shipList) {
-        // Generates an array of coordinates
-        let checking = generateNewCoord(ship)
-
-
-        let result = undefined;
-        for (let coord of checking) {
-            let check = notAvailable.indexOf(coord);
-            if (check >= 0) {
-                result = false;
-                checkCoord();
-                break;
-            } else {
-                result = true;
+        if (ship.rotation == "horizontal" && typeof ship.xCoord == "number" && typeof ship.yCoord == "number") {
+            for (let i = 0; i < ship.size; i++) {
+                allOccupiedSquares.push(`x${ship.xCoord + i}y${ship.yCoord}`);
             }
         }
-        if (result === true) {
-            for (let coord of checking) {
-                notAvailable.push(coord);
+        else if (ship.rotation == "vertical" && typeof ship.xCoord == "number" && typeof ship.yCoord == "number") {
+            for (let i = 0; i < ship.size; i++) {
+                allOccupiedSquares.push(`x${ship.xCoord}y${ship.yCoord + i}`);
             }
-        } else {
-
-        }        
+        }
     }
-    
-    // console.log(notAvailable, notAvailable.length)
+    // a "Set" is a collection of unique values. Any duplicate coordinates from the array will be removed, so if the lengths are not the same there was overlap
+    return new Set(allOccupiedSquares).size === allOccupiedSquares.length;
 }
-checkCoord()
 
+// generates random coords for all ships, making sure sure there are no duplicates
+function randomCoordinatesAllShips() {
+    for (let ship of shipList) {
+        randomCoord(ship);
+        while (checkCoordValidity == false) {
+            randomCoord(ship);
+        }
+        console.log(`x${ship.xCoord}y${ship.yCoord} for ${ship.name}`);
+    }
+}
+randomCoordinatesAllShips()
+
+function shipMovement(inputShip) {
+    inputShip.direction = generateDirection();
+    if (inputShip.rotation === `horizontal`) {
+        inputShip.direction = generateDirection();
+    } else if ( inputShip.rotation === `vertical`)
+
+
+
+    let direction = inputShip.direction;
+    let speed = inputShip.speed;
+    let xCoord = inputShip.xCoord;
+    let yCoord = inputShip.yCoord;
+
+    if (direction === `right`) {
+        inputShip.xCoord = xCoord + speed;
+    } else if (direction === `left`) {
+        inputShip.xCoord = xCoord - speed;
+    } else if (direction === `up`) {
+        inputShip.yCoord = yCoord + speed;
+    } else {
+        inputShip.yCoord = yCoord - speed;
+    }
+    console.log(direction, xCoord, yCoord, speed)
+
+}
 
 function moveShip() {
-    for (ship of shipList) {
-        let name = ship.name;
-        let xAxis = ship.xCoord;
-        let yAxis = ship.yCoord;
-        let size = ship.size;
-        
-        let rotation = ship.rotation;
-        console.table([name, xAxis, yAxis])
+    for (let ship of shipList) {
+        shipMovement(ship);
+        // console.log(ship.xCoord, ship.yCoord, ship.size)
+        while (ship.xCoord < ship.size) {
+            shipMovement(ship);
+        }
+        while (ship.yCoord < ship.size) {
+            shipMovement(ship);
+        }
+        while (checkCoordValidity == false) {
+            shipMovement(ship);
+        }
+        console.log(`x${ship.xCoord}y${ship.yCoord} for ${ship.name}`);
     }
 }
+moveShip()
 
 
-// for (let ship of shipList) {
-//     let name = ship.name;
-//     let xAxis = ship.xCoord;
-//     let yAxis = ship.yCoord;
-//     let size = ship.size;
-//     let rotation = ship.rotation;
-//     console.table([name, xAxis, yAxis])
-// }
+
+
