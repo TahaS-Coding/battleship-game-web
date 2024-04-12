@@ -194,15 +194,12 @@ class Destroyer {
         this.speed = 4;
         this.xCoord = undefined;
         this.yCoord = undefined;
-        this.direction = generateDirection();
-        this.rotation = rotation(this.direction);
+        this.direction = undefined;
+        this.rotation = undefined;
     }
 }
 let shipList = [new AircraftCarrier(), new Destroyer()];
 
-
-// This function uses the number generator to decide what direction the ships is going
-// Going to need to check if direction is available
 function generateDirection() {
     let d = rng();
     if (d <= 5) {
@@ -216,26 +213,24 @@ function generateDirection() {
     }
 }
 
-// Determines the ship orientation
-// up and down = vertical
-// left and right = horizontal
-// I forgot why I made this
-function rotation(d) {
-    switch (d) {
+function rotation(inputShip) {
+    let direction = generateDirection();
+    switch (direction) {
         case (`left`):
-            // console.log(`horizontal`)
-            return `horizontal`;
+            inputShip.rotation = `horizontal`;
+            break;
         case (`right`):
-            // console.log(`horizontal`)
-            return `horizontal`;
+            inputShip.rotation = `horizontal`;
+            break;
         case (`up`):
-            // console.log(`vertical`)
-            return `vertical`;
+            inputShip.rotation = `vertical`;
+            break;
         case (`down`):
-            // console.log(`vertical`)
-            return `vertical`;
+            inputShip.rotation = `vertical`;
+            break;
     }
 }
+
 
 // generates random number 1 - 20
 function rng() {
@@ -244,6 +239,7 @@ function rng() {
 }
 // Generates a random coordinate for the ship, makes sure ship does not escape grid
 function randomCoord(inputShip) {
+    rotation(inputShip);
     if (inputShip.rotation == "horizontal") {
         inputShip.xCoord = rng();
         while (inputShip.xCoord < inputShip.size) {
@@ -274,6 +270,7 @@ function checkCoordValidity() {
                 allOccupiedSquares.push(`x${ship.xCoord}y${ship.yCoord + i}`);
             }
         }
+
     }
     // a "Set" is a collection of unique values. Any duplicate coordinates from the array will be removed, so if the lengths are not the same there was overlap
     return new Set(allOccupiedSquares).size === allOccupiedSquares.length;
@@ -286,55 +283,87 @@ function randomCoordinatesAllShips() {
         while (checkCoordValidity == false) {
             randomCoord(ship);
         }
+        console.log(ship.rotation)
         console.log(`x${ship.xCoord}y${ship.yCoord} for ${ship.name}`);
     }
 }
 randomCoordinatesAllShips()
 
-function shipMovement(inputShip) {
-    inputShip.direction = generateDirection();
-    if (inputShip.rotation === `horizontal`) {
-        inputShip.direction = generateDirection();
-    } else if ( inputShip.rotation === `vertical`)
-
-
-
-    let direction = inputShip.direction;
-    let speed = inputShip.speed;
+function coordinateRestriction(ship) {
+    let xCoord = ship.xCoord;
+    let yCoord = ship.yCoord;
+    let variable1 = (xCoord <= 0 && xCoord > 20 && yCoord <= 0 && yCoord > 20);
+    // If coordinates go under or over it will return true
+    // console.log(variable1)
+    let variable2 = undefined;
+    if (ship.rotation == "horizontal") {
+        if (ship.xCoord < ship.size) {
+            variable2 = false;
+        } else {
+            variable2 = true;
+        }
+    }
+    else if (ship.rotation == "vertical") {
+        if (ship.yCoord < ship.size) {
+            variable2 = false;
+        } else {
+            variable2 = true;
+        }
+    } else {
+        variable2 = true;
+    }
+    return variable1 && variable2;
+ 
+}
+// console.log(coordinateRestriction())
+function moveShip(inputShip) {
     let xCoord = inputShip.xCoord;
     let yCoord = inputShip.yCoord;
-
-    if (direction === `right`) {
-        inputShip.xCoord = xCoord + speed;
-    } else if (direction === `left`) {
-        inputShip.xCoord = xCoord - speed;
-    } else if (direction === `up`) {
-        inputShip.yCoord = yCoord + speed;
-    } else {
-        inputShip.yCoord = yCoord - speed;
+    let rotation = inputShip.rotation;
+    let speed = inputShip.speed;
+    switch (generateDirection()) {
+        case (`right`):
+            inputShip.xCoord += speed;
+            break;
+        case (`left`):
+            inputShip.xCoord -= speed;
+            break;
+        case (`up`):
+            inputShip.yCoord += speed;
+            break;
+        case (`down`):
+            inputShip.yCoord -= speed;
+            break;
     }
-    console.log(direction, xCoord, yCoord, speed)
+    console.log(inputShip.xCoord, xCoord, inputShip.yCoord, yCoord, rotation)
+    if (!(checkCoordValidity()) && coordinateRestriction(inputShip) === false) {
+        inputShip.xCoord = xCoord;
+        inputShip.yCoord = yCoord;
+        console.log(!(checkCoordValidity()), coordinateRestriction(inputShip))
+    }
 
 }
-
-function moveShip() {
-    for (let ship of shipList) {
-        shipMovement(ship);
-        // console.log(ship.xCoord, ship.yCoord, ship.size)
-        while (ship.xCoord < ship.size) {
-            shipMovement(ship);
-        }
-        while (ship.yCoord < ship.size) {
-            shipMovement(ship);
-        }
-        while (checkCoordValidity == false) {
-            shipMovement(ship);
-        }
-        console.log(`x${ship.xCoord}y${ship.yCoord} for ${ship.name}`);
-    }
+for (ship of shipList) {
+    moveShip(ship)
+    console.log(ship.xCoord, ship.yCoord)
 }
-moveShip()
+
+// This function uses the number generator to decide what direction the ships is going
+// Going to need to check if direction is available
 
 
 
+// function shipAction() {
+//     for (let ship of shipList) {
+//         if (rng() <= 10) {
+//             rotation(ship);
+//             while (checkCoordValidity() === false){
+//                 rotation(ship);
+//             }
+//        } else {
+//             moveShip(ship);
+//         }
+//     }
+// }
+// shipAction()
 
