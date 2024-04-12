@@ -93,14 +93,14 @@ document.addEventListener(`DOMContentLoaded`, function () {
     function checkCoordValidity() {
         let allOccupiedSquares = [];
         // for loop pushes coordinates for all squares covered by each ship to the allOccupiedSquares array, unless coordinate values undefined
-        for (let ship of shipList){
-            if (ship.rotation == "horizontal" && typeof ship.xCoord == "number" && typeof ship.yCoord == "number"){
-                for (let i = 0; i < ship.size; i++){
+        for (let ship of shipList) {
+            if (ship.rotation == "horizontal" && typeof ship.xCoord == "number" && typeof ship.yCoord == "number") {
+                for (let i = 0; i < ship.size; i++) {
                     allOccupiedSquares.push(`x${ship.xCoord + i}y${ship.yCoord}`);
                 }
             }
-            else if(ship.rotation == "vertical" && typeof ship.xCoord == "number" && typeof ship.yCoord == "number"){
-                for (let i = 0; i < ship.size; i++){
+            else if (ship.rotation == "vertical" && typeof ship.xCoord == "number" && typeof ship.yCoord == "number") {
+                for (let i = 0; i < ship.size; i++) {
                     allOccupiedSquares.push(`x${ship.xCoord}y${ship.yCoord + i}`);
                 }
             }
@@ -108,17 +108,47 @@ document.addEventListener(`DOMContentLoaded`, function () {
         // a "Set" is a collection of unique values. Any duplicate coordinates from the array will be removed, so if the lengths are not the same there was overlap
         return new Set(allOccupiedSquares).size === allOccupiedSquares.length;
     }
-    
+
     // generates random coords for all ships, making sure sure there are no duplicates
-    function randomCoordinatesAllShips(){
-        for (let ship of shipList){
+    function randomCoordinatesAllShips() {
+        for (let ship of shipList) {
             randomCoord(ship);
-            while(checkCoordValidity == false){
+            while (checkCoordValidity() == false) {
                 randomCoord(ship);
+                console.log("found false");
             }
             console.log(`x${ship.xCoord}y${ship.yCoord} for ${ship.name}`);
         }
     }
-
     randomCoordinatesAllShips();
+
+    function moveShips() {
+        for (ship of shipList) {
+            let randomNum = Math.random();
+            // 50% chance to rotate
+            if (randomNum < 0.5) {
+                if (ship.rotation == "horizontal"){
+                    ship.rotation == "vertical";
+                    checkCoordValidity() ? ship.rotation = "vertical": ship.rotation = "horizontal";
+                }
+                else if (ship.rotation == "vertical"){
+                    ship.rotation == "horizontal";
+                    checkCoordValidity() ? ship.rotation = "horizontal": ship.rotation = "vertical";
+                }
+            }
+            // 50% chance to move
+            else {
+                let shipMovementRange = Math.floor(Math.random() * (ship.speed - (ship.speed * -1) + 1)) + (ship.speed * -1);
+                let prevXCoord = ship.xCoord;
+                let prevYCoord = ship.yCoord;
+                if (ship.rotation == "horizontal"){
+                    ship.xCoord += shipMovementRange;
+                }
+                else if (ship.rotation == "vertical"){
+                    ship.yCoord += shipMovementRange;
+                }
+                checkCoordValidity() ? ship.rotation = "horizontal": ship.rotation = "vertical";
+            }
+        }
+    }
 });
