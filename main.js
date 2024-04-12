@@ -1,5 +1,50 @@
 document.addEventListener(`DOMContentLoaded`, function () {
-    let gameBoardOverlay = document.getElementById('gameBoardOverlay');
+    let gameMode = undefined;
+
+    let gameModeSelectScreen = document.getElementById('gameModeSelect');
+    let playerButton = document.getElementById('playerButton');
+    let computerButton = document.getElementById('computerButton');
+    playerButton.addEventListener('click', function(){
+        gameMode = "player";
+        gameModeSelectScreen.classList.add("hidden");
+        shipSelectionScreen.classList.remove("hidden");
+    });
+    computerButton.addEventListener('click', function(){
+        gameMode = "computer";
+        gameModeSelectScreen.classList.add("hidden");
+        shipSelectionScreen.classList.remove("hidden");
+    });
+
+    let shipSelectionScreen = document.getElementById('shipSelection');
+    let shipSelectionContinueButton = document.getElementById("shipSelectionContinueButton");
+    shipSelectionContinueButton.addEventListener('click', function(){
+        shipSelectionScreen.classList.add("hidden");
+        gameplayScreen.classList.remove("hidden");
+    });
+
+    let gameplayScreen = document.getElementById('gameScreen');
+
+    let instructionsButtons = document.querySelectorAll('instructionsButton');
+    let instructionsOverlay = document.querySelectorAll('instructionsOverlay');
+    let closeInstructionsOverlayButtons = document.querySelectorAll('closeInstructionsOverlay');
+    for (button of instructionsButtons){
+        button.addEventListener('click', function(){
+            for (overlay of instructionsOverlay){
+                overlay.classList.remove('hidden');
+            }
+        });
+    }
+    for (button of closeInstructionsOverlayButtons){
+        button.addEventListener('click', function(){
+            for (overlay of instructionsOverlay){
+                overlay.classList.add('hidden');
+            }
+        });
+    }
+
+
+
+    let gameBoardOverlay = document.getElementById('gameBoardOverlayPlayerOne');
     let gameBoard = new Map();
     // 2 for loops to create a 2d array for the OVERLAY board as well as create a map for the actual GAME baord
     for (rows = 20; rows > 0; rows--) {
@@ -53,6 +98,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             this.xCoord = undefined;
             this.yCoord = undefined;
             this.rotation = "horizontal";
+            this.speed = 1;
         }
     }
     class Destroyer {
@@ -62,10 +108,10 @@ document.addEventListener(`DOMContentLoaded`, function () {
             this.xCoord = undefined;
             this.yCoord = undefined;
             this.rotation = "vertical";
+            this.speed = 2;
         }
     }
     let shipList = [new AircraftCarrier(), new Destroyer()];
-
 
     // generates random number 1 - 20
     function rng() {
@@ -115,9 +161,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             randomCoord(ship);
             while (checkCoordValidity() == false) {
                 randomCoord(ship);
-                console.log("found false");
             }
-            console.log(`x${ship.xCoord}y${ship.yCoord} for ${ship.name}`);
         }
     }
     randomCoordinatesAllShips();
@@ -127,6 +171,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             let randomNum = Math.random();
             // 50% chance to rotate
             if (randomNum < 0.5) {
+                // wont do the rotate if it messed up coordinate validity, otherwise will change rotation
                 if (ship.rotation == "horizontal"){
                     ship.rotation == "vertical";
                     checkCoordValidity() ? ship.rotation = "vertical": ship.rotation = "horizontal";
@@ -138,6 +183,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             }
             // 50% chance to move
             else {
+                // wont move if it messed up coordinate validity. Can move the amount of squares equivalent to or less than ship.speed value in its rotations direction
                 let shipMovementRange = Math.floor(Math.random() * (ship.speed - (ship.speed * -1) + 1)) + (ship.speed * -1);
                 let prevXCoord = ship.xCoord;
                 let prevYCoord = ship.yCoord;
@@ -147,8 +193,14 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 else if (ship.rotation == "vertical"){
                     ship.yCoord += shipMovementRange;
                 }
-                checkCoordValidity() ? ship.rotation = "horizontal": ship.rotation = "vertical";
+                if (checkCoordValidity() == false || ship.xCoord < ship.size || ship.yCoord < ship.size || ship.xCoord > 20 || ship.yCoord > 20){
+                    ship.xCoord = prevXCoord;
+                    ship.yCoord = prevYCoord;
+                }
             }
         }
     }
+    moveShips();
+
+
 });
