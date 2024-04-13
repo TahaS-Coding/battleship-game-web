@@ -24,9 +24,9 @@ document.addEventListener(`DOMContentLoaded`, function () {
 
     let gameplayScreen = document.getElementById('gameScreen');
 
-    let instructionsButtons = document.querySelectorAll('instructionsButton');
-    let instructionsOverlay = document.querySelectorAll('instructionsOverlay');
-    let closeInstructionsOverlayButtons = document.querySelectorAll('closeInstructionsOverlay');
+    let instructionsButtons = document.querySelectorAll('.instructionsButton');
+    let instructionsOverlay = document.querySelectorAll('.instructionsOverlay');
+    let closeInstructionsOverlayButtons = document.querySelectorAll('.closeInstructionsOverlay');
     for (button of instructionsButtons){
         button.addEventListener('click', function(){
             for (overlay of instructionsOverlay){
