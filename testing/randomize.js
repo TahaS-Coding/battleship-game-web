@@ -1,24 +1,24 @@
-class AircraftCarrier {
-    constructor() {
-        this.name = "AircraftCarrier";
-        this.size = 5;
-        this.xCoord = undefined;
-        this.yCoord = undefined;
-        this.rotation = "horizontal";
-        this.abilityName = `Airplane`;
-    }
-}
-class Destroyer {
-    constructor() {
-        this.name = "Destroyer";
-        this.size = 4;
-        this.xCoord = undefined;
-        this.yCoord = undefined;
-        this.rotation = "vertical";
-        this.abilityName = `Torpedo`;
-    }
-}
-let shipList = [new AircraftCarrier(), new Destroyer()];
+// class AircraftCarrier {
+//     constructor() {
+//         this.name = "AircraftCarrier";
+//         this.size = 5;
+//         this.xCoord = undefined;
+//         this.yCoord = undefined;
+//         this.rotation = "horizontal";
+//         this.abilityName = `Airplane`;
+//     }
+// }
+// class Destroyer {
+//     constructor() {
+//         this.name = "Destroyer";
+//         this.size = 4;
+//         this.xCoord = undefined;
+//         this.yCoord = undefined;
+//         this.rotation = "vertical";
+//         this.abilityName = `Torpedo`;
+//     }
+// }
+// let shipList = [new AircraftCarrier(), new Destroyer()];
 
 
 // generates random number 1 - 20
@@ -26,20 +26,22 @@ function rng() {
     let rng = Math.floor((Math.random() * 20) + 1);
     return rng;
 }
-function createButtons() {
-    let abilityList = document.getElementById('abilityList');
-    console.log(abilityList)
 
-    for (ship of shipList) {
-        let abilityName = ship.abilityName;
-        let abilityButton = document.createElement("button");
-        abilityButton.setAttribute("id", abilityName);
-        abilityButton.classList.add("ability");
-        abilityButton.innerHTML = abilityName;
-        abilityList.appendChild(abilityButton);
-    };
-}
-createButtons()
+// function createButtons() {
+//     let abilityList = document.getElementById('abilityList');
+//     console.log(abilityList)
+
+//     for (ship of shipList) {
+//         let abilityName = ship.abilityName;
+//         let abilityButton = document.createElement("button");
+//         abilityButton.setAttribute("id", abilityName);
+//         abilityButton.classList.add("ability");
+//         abilityButton.innerHTML = abilityName;
+//         abilityList.appendChild(abilityButton);
+//     };
+// }
+// createButtons()
+
 // Generates a random coordinate for the ship, makes sure ship does not escape grid
 function randomCoord(inputShip) {
     if (inputShip.rotation == "horizontal") {
@@ -119,6 +121,58 @@ function moveShips() {
         }
     }
 }
+
+
+class AircraftCarrier {
+    constructor() {
+        this.name = "AircraftCarrier";
+        this.size = 5;
+        this.xCoord = 12;
+        this.yCoord = 5;
+        this.rotation = "horizontal";
+        this.abilityName = `Airplane`;
+    }
+}
+class Destroyer {
+    constructor() {
+        this.name = "Destroyer";
+        this.size = 4;
+        this.xCoord = 12;
+        this.yCoord = 5;
+        this.rotation = "vertical";
+        this.abilityName = `Torpedo`;
+    }
+}
+let shipList = [new AircraftCarrier(), new Destroyer()];
+
+function hitCoordinate(coordinate) {
+    let splitID = coordinate.match(/\d+/g);
+    let sqrXCoord = null;
+    let sqrYCoord = null;
+    for (let char of splitID) {
+        let num = Number(char);
+        if (sqrXCoord == null) {
+            sqrXCoord = num;
+        }
+        else if (sqrXCoord != null) {
+            sqrYCoord = num;
+        }
+    }
+    // Sees if ship is on that coordinate
+    for (let ship of shipList) {
+        if (ship.rotation == "horizontal" && ship.yCoord == sqrYCoord) {
+            if (sqrXCoord <= ship.xCoord && sqrXCoord > ship.xCoord - ship.size) {
+                console.log(`hit ${ship.name} at ${coordinate}`);
+            }
+        }
+        else if (ship.rotation == "vertical" && ship.xCoord == sqrXCoord) {
+            if (sqrYCoord <= ship.yCoord && sqrYCoord > ship.yCoord - ship.size) {
+                console.log(`hit ${ship.name} at ${coordinate}`);
+            }
+        }
+    }
+}
+hitCoordinate(`x12y5`)
 
 // create array of squareId clicked
 // run it through shipCoord.indexOf

@@ -24,9 +24,9 @@ document.addEventListener(`DOMContentLoaded`, function () {
 
     let gameplayScreen = document.getElementById('gameScreen');
 
-    let instructionsButtons = document.querySelectorAll('.instructionsButton');
-    let instructionsOverlay = document.querySelectorAll('.instructionsOverlay');
-    let closeInstructionsOverlayButtons = document.querySelectorAll('.closeInstructionsOverlay');
+    let instructionsButtons = document.querySelectorAll('instructionsButton');
+    let instructionsOverlay = document.querySelectorAll('instructionsOverlay');
+    let closeInstructionsOverlayButtons = document.querySelectorAll('closeInstructionsOverlay');
     for (button of instructionsButtons) {
         button.addEventListener('click', function () {
             for (overlay of instructionsOverlay) {
@@ -58,7 +58,8 @@ document.addEventListener(`DOMContentLoaded`, function () {
             newSquare.addEventListener("click", function () {
                 // Gets coordinates of clicked square
                 let clickedSqrID = this.getAttribute("id");
-                hitCoordinate(clickedSqrID);
+                console.log(clickedSqrID)
+                selectedCoordinate(clickedSqrID);
 
             });
             gameBoardOverlay.appendChild(newSquare);
@@ -68,7 +69,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
     }
 
     // Check if coordinate hits any ship
-    function hitCoordinate(coordinate) {
+    function selectedCoordinate(coordinate) {
         let splitID = coordinate.match(/\d+/g);
         let sqrXCoord = null;
         let sqrYCoord = null;
@@ -102,20 +103,21 @@ document.addEventListener(`DOMContentLoaded`, function () {
         constructor() {
             this.name = "AircraftCarrier";
             this.size = 5;
+            this.health = 6;
+            this.speed = 1;
             this.xCoord = undefined;
             this.yCoord = undefined;
             this.rotation = "horizontal";
-            this.speed = 1;
         }
     }
     class Destroyer {
         constructor() {
             this.name = "Destroyer";
             this.size = 4;
+            this.speed = 2;
             this.xCoord = undefined;
             this.yCoord = undefined;
             this.rotation = "vertical";
-            this.speed = 2;
         }
     }
     let shipList = [new AircraftCarrier(), new Destroyer()];
@@ -238,5 +240,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
     }
     moveShips();
 
-
+    for (s of shipList) {
+        console.log(s)
+    }
 });
