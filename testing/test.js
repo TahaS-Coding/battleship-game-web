@@ -54,19 +54,27 @@ document.addEventListener(`DOMContentLoaded`, function () {
             let newSquare = document.createElement("button");
             newSquare.setAttribute("id", sqrID);
             newSquare.classList.add("squares");
+
+
+
             // when square clicked
             newSquare.addEventListener("click", function () {
                 // Gets coordinates of clicked square
                 let clickedSqrID = this.getAttribute("id");
-                console.log(clickedSqrID)
-                selectedCoordinate(clickedSqrID);
-
+                let abilityActive = abilityTrueOrFalse();
+                if (abilityActive[0] === true) {
+                    let arrayOfCoordinates = abilities()
+                    selectedCoordinate(abilityActive[1]);
+                } else {
+                    selectedCoordinate(clickedSqrID);
+                }
             });
             gameBoardOverlay.appendChild(newSquare);
             //Creates a map for gameboard squares 
             gameBoard.set(`${sqrID}`, {});
         }
     }
+
 
     // Check if coordinate hits any ship
     function selectedCoordinate(coordinate) {
@@ -82,22 +90,47 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 sqrYCoord = num;
             }
         }
+
         // Sees if ship is on that coordinate
         for (let ship of shipList) {
             if (ship.rotation == "horizontal" && ship.yCoord == sqrYCoord) {
                 if (sqrXCoord <= ship.xCoord && sqrXCoord > ship.xCoord - ship.size) {
-                    ship.health--;
-                    console.log(`hit ${ship.name} at ${coordinate}`);
+                    respond(ship.name, coordinate);
                 }
             }
             else if (ship.rotation == "vertical" && ship.xCoord == sqrXCoord) {
                 if (sqrYCoord <= ship.yCoord && sqrYCoord > ship.yCoord - ship.size) {
-                    ship.health--;
-                    console.log(`hit ${ship.name} at ${coordinate}`);
+                    respond(ship.name, coordinate);
                 }
+            } else {
+                respond();
             }
         }
     }
+
+    // Changes output based on what happen (i.e., abilities)
+    // add a else if for abilities
+    function respond(shipName, coordinate) {
+        if (shipName === undefined) {
+            console.log(`Nothing hit`);
+            return `Nothing hit`;
+        } else {
+            ship.health--;
+            console.log(`hit ${shipName} at ${coordinate}`);
+            return (`hit ${shipName} at ${coordinate}`);
+        }
+    }
+
+    function abilityTrueOrFalse() {
+        for (abilityID of abilitiesList) {
+            let shipAbility = document.getElementById(`${abilityID}`)
+            if (shipAbility.name === `on`) {
+                return [true, shipAbility];
+            }
+        }
+        return [false];
+    }
+
 
     class AircraftCarrier {
         constructor() {
@@ -108,6 +141,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             this.xCoord = undefined;
             this.yCoord = undefined;
             this.rotation = "horizontal";
+            this.abilityName = `Airplane`;
         }
     }
     class Destroyer {
@@ -118,17 +152,56 @@ document.addEventListener(`DOMContentLoaded`, function () {
             this.xCoord = undefined;
             this.yCoord = undefined;
             this.rotation = "vertical";
+            this.abilityName = `Torpedo`;
         }
     }
     let shipList = [new AircraftCarrier(), new Destroyer()];
+    let abilitiesList = [];
+    // Creates buttons for the ability
+    // It also turn the ability on and off based on click
+    function createButtons() {
+        let abilityList = document.getElementById('abilityList');
+        let cancelButton = document.createElement(`button`);
+        cancelButton.setAttribute("id", "cancel");
+        cancelButton.innerHTML = `Cancel`;
+        for (ship of shipList) {
+            let abilityName = ship.abilityName;
+            abilitiesList.push(abilityName);
+            let abilityButton = document.createElement("button");
+            abilityButton.setAttribute("id", abilityName);
+            abilityButton.setAttribute("name", `off`);
+            abilityButton.classList.add("ability");
+            abilityButton.innerHTML = abilityName;
+            abilityList.appendChild(abilityButton);
+            // Which ever ability gets click, the name will change to on
+            // This will determine which ability is being used
+            abilityButton.addEventListener(`click`, function () {
+                // Set the name to off for all the buttons
+                // This prevents having multiple abilities being actives
+                for (ship of shipList) {
+                    let abilityId = ship.abilityName;
+                    let abilityBttn = document.getElementById(`${abilityId}`)
+                    abilityBttn.setAttribute("name", "off")
+                }
+                abilityButton.setAttribute("name", "on");
+            })
+        };
+        abilityList.appendChild(cancelButton);
+        cancelButton.addEventListener(`click`, function () {
+            for (ship of shipList) {
+                let abilityId = ship.abilityName;
+                let abilityBttn = document.getElementById(`${abilityId}`)
+                abilityBttn.setAttribute("name", "off")
+            }
+        })
 
-    // generates random number 1 - 20
-    function rng() {
-        let rng = Math.floor((Math.random() * 20) + 1);
-        return rng;
+        console.log(abilitiesList)
     }
+    createButtons()
 
-    function hitCoordinate(coordinate) {
+    // Generate coordinates for the ability 
+    function abilities(coordinate) {
+        // Splits coordianate into x and y
         let splitID = coordinate.match(/\d+/g);
         let sqrXCoord = null;
         let sqrYCoord = null;
@@ -141,20 +214,18 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 sqrYCoord = num;
             }
         }
-        // Sees if ship is on that coordinate
-        for (let ship of shipList) {
-            if (ship.rotation == "horizontal" && ship.yCoord == sqrYCoord) {
-                if (sqrXCoord <= ship.xCoord && sqrXCoord > ship.xCoord - ship.size) {
-                    console.log(`hit ${ship.name} at ${coordinate}`);
-                }
-            }
-            else if (ship.rotation == "vertical" && ship.xCoord == sqrXCoord) {
-                if (sqrYCoord <= ship.yCoord && sqrYCoord > ship.yCoord - ship.size) {
-                    console.log(`hit ${ship.name} at ${coordinate}`);
-                }
-            }
-        }
+
+        return [sqrXCoord, sqrYCoord]
     }
+    console.log(abilities(`x2y2`))
+
+    // generates random number 1 - 20
+    function rng() {
+        let rng = Math.floor((Math.random() * 20) + 1);
+        return rng;
+    }
+
+
 
     // Generates a random coordinate for the ship, makes sure ship does not escape grid
     function randomCoord(inputShip) {
@@ -172,6 +243,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             }
             inputShip.xCoord = rng();
         }
+        console.log(inputShip);
     }
     // returns true if no Coordinates overlap, false if any Coordinates do
     function checkCoordValidity() {
@@ -240,7 +312,4 @@ document.addEventListener(`DOMContentLoaded`, function () {
     }
     moveShips();
 
-    for (s of shipList) {
-        console.log(s)
-    }
 });
