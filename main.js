@@ -7,6 +7,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
     let playerOneShipList = [];
     let playerTwoShipList = [];
     let computerShipList = [];
+    let player = "p1";
 
     // game mode select screen
     let gameModeSelectScreen = document.getElementById('gameModeSelect');
@@ -116,6 +117,9 @@ document.addEventListener(`DOMContentLoaded`, function () {
         if (gameMode == "computer" && playerOneShipsSelected == true){
             shipSelectionScreen.classList.add("hidden");
             gameplayScreen.classList.remove("hidden");
+            createOverlays();
+            randomCoordinatesAllShips(playerOneShipList);
+            randomCoordinatesAllShips(playerTwoShipList);
         }
         else if(gameMode == "computer" && playerOneShipsSelected == false){
             alert("choose 5 ships");
@@ -131,6 +135,9 @@ document.addEventListener(`DOMContentLoaded`, function () {
         else if (gameMode == "player" && playerTwoShipsSelected == true){
             shipSelectionScreen.classList.add("hidden");
             gameplayScreen.classList.remove("hidden");
+            createOverlays();
+            randomCoordinatesAllShips(playerOneShipList);
+            randomCoordinatesAllShips(computerShipList);
         }
         else if(gameMode == "player" && playerTwoShipsSelected == false){
             alert("choose 5 ships");
@@ -139,6 +146,8 @@ document.addEventListener(`DOMContentLoaded`, function () {
 
     // gameplay screen
     let gameplayScreen = document.getElementById('gameScreen');
+    let playerOneOverlayBoard = document.getElementById("gameBoardOverlayPlayerOne");
+    let playerTwoOverlayBoard = document.getElementById("gameBoardOverlayPlayerTwo");
 
     // instructions overlay
     let instructionsButtons = document.querySelectorAll('.instructionsButton');
@@ -161,29 +170,61 @@ document.addEventListener(`DOMContentLoaded`, function () {
 
 
 
-    let gameBoardOverlay = document.getElementById('gameBoardOverlayPlayerOne');
-    let gameBoard = new Map();
-    // 2 for loops to create a 2d array for the OVERLAY board as well as create a map for the actual GAME baord
-    for (rows = 20; rows > 0; rows--) {
-        for (columns = 1; columns < 21; columns++) {
-            // Creates button elements with unique coordinate id's, hit detection, as children of overlay
-            let sqrID = `x${columns}y${rows}`;
-            let newSquare = document.createElement("button");
-            newSquare.setAttribute("id", sqrID);
-            newSquare.classList.add("squares");
-            // when square clicked
-            newSquare.addEventListener("click", function () {
-                // Gets coordinates of clicked square
-                let clickedSqrID = this.getAttribute("id");
-                hitCoordinate(clickedSqrID);
 
-            });
-            gameBoardOverlay.appendChild(newSquare);
-            //Creates a map for gameboard squares 
-            gameBoard.set(`${sqrID}`, {});
+    // 2 for loops to create a 2d array for the overlay board(s)
+    function createOverlays(){
+        for (rows = 20; rows > 0; rows--) {
+            for (columns = 1; columns < 21; columns++) {
+                // Creates button elements with unique coordinate id's, hit detection, as children of overlay
+                let sqrID = `x${columns}y${rows}`;
+                let newSquare = document.createElement("button");
+                newSquare.setAttribute("id", sqrID);
+                newSquare.classList.add("squares");
+                let newSquareClone = newSquare.cloneNode(true);
+                // when square clicked
+                newSquare.addEventListener("click", function () {
+                    // Gets coordinates of clicked square
+                    let clickedSqrID = this.getAttribute("id");
+                    hitCoordinate(clickedSqrID);
+                    //change player turn
+                    if (gameMode == "player"){
+                        playerOneOverlayBoard.classList.add("hidden");
+                        moveShips(playerOneShipList);
+                        playerTwoOverlayBoard.classList.remove("hidden");
+                        player = "p2";
+                    }
+                    else if (gameMode == "computer"){
+                        computerStuff();
+                    }
+    
+                });
+                newSquareClone.addEventListener("click", function () {
+                    // Gets coordinates of clicked square
+                    let clickedSqrID = this.getAttribute("id");
+                    hitCoordinate(clickedSqrID);
+                    //change player turn
+                    if (gameMode == "player"){
+                        playerTwoOverlayBoard.classList.add("hidden");
+                        moveShips(playerTwoShipList);
+                        playerOneOverlayBoard.classList.remove("hidden");
+                        player = "p1";
+                    }
+                    else if (gameMode == "computer"){
+                        computerStuff();
+                    }
+    
+                });
+
+                if (gameMode == "player"){
+                    playerOneOverlayBoard.appendChild(newSquare);
+                    playerTwoOverlayBoard.appendChild(newSquareClone);
+                }
+                else{
+                    playerOneOverlayBoard.appendChild(newSquare);
+                }
+            }
         }
     }
-
     // Check if coordinate hits any ship
     function hitCoordinate(coordinate) {
         let splitID = coordinate.match(/\d+/g);
@@ -198,7 +239,24 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 sqrYCoord = num;
             }
         }
-        // Sees if ship is on that coordinate
+        // Sees if ship is on that coordinate (based on whos grid is being attacked)
+        let shipList;
+        if (gameMode == "player"){
+            if (player = "p1"){
+                shipList = playerTwoShipList;
+            }
+            else{
+                shipList = playerOneShipList;
+            }
+        }
+        else if (gameMode == "computer"){
+            if (player = "p1"){
+                shipList = computerShipList;
+            }
+            else{
+                shipList = playerOneShipList;
+            }
+        }
         for (let ship of shipList) {
             if (ship.rotation == "horizontal" && ship.yCoord == sqrYCoord) {
                 if (sqrXCoord <= ship.xCoord && sqrXCoord > ship.xCoord - ship.size) {
@@ -214,6 +272,10 @@ document.addEventListener(`DOMContentLoaded`, function () {
             }
         }
     }
+    function computerStuff(){
+
+    }
+
 
     class AircraftCarrier {
         constructor() {
@@ -265,7 +327,6 @@ document.addEventListener(`DOMContentLoaded`, function () {
             this.speed = 2;
         }
     }
-    let shipList = [new AircraftCarrier(), new Destroyer()];
 
     // generates random number 1 - 20
     function rng() {
@@ -273,33 +334,6 @@ document.addEventListener(`DOMContentLoaded`, function () {
         return rng;
     }
 
-    function hitCoordinate(coordinate) {
-        let splitID = coordinate.match(/\d+/g);
-        let sqrXCoord = null;
-        let sqrYCoord = null;
-        for (let char of splitID) {
-            let num = Number(char);
-            if (sqrXCoord == null) {
-                sqrXCoord = num;
-            }
-            else if (sqrXCoord != null) {
-                sqrYCoord = num;
-            }
-        }
-        // Sees if ship is on that coordinate
-        for (let ship of shipList) {
-            if (ship.rotation == "horizontal" && ship.yCoord == sqrYCoord) {
-                if (sqrXCoord <= ship.xCoord && sqrXCoord > ship.xCoord - ship.size) {
-                    console.log(`hit ${ship.name} at ${coordinate}`);
-                }
-            }
-            else if (ship.rotation == "vertical" && ship.xCoord == sqrXCoord) {
-                if (sqrYCoord <= ship.yCoord && sqrYCoord > ship.yCoord - ship.size) {
-                    console.log(`hit ${ship.name} at ${coordinate}`);
-                }
-            }
-        }
-    }
 
     // Generates a random coordinate and rotation for the ship, makes sure ship does not escape grid
     function randomCoord(inputShip) {
@@ -328,7 +362,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         }
     }
     // returns true if no Coordinates overlap, false if any Coordinates do
-    function checkCoordValidity() {
+    function checkCoordValidity(shipList) {
         let allOccupiedSquares = [];
         // for loop pushes coordinates for all squares covered by each ship to the allOccupiedSquares array, unless coordinate values undefined
         for (let ship of shipList) {
@@ -348,17 +382,16 @@ document.addEventListener(`DOMContentLoaded`, function () {
     }
 
     // generates random coords for all ships, making sure sure there are no duplicates
-    function randomCoordinatesAllShips() {
+    function randomCoordinatesAllShips(shipList) {
         for (let ship of shipList) {
             randomCoord(ship);
-            while (checkCoordValidity() == false) {
+            while (checkCoordValidity(shipList) == false) {
                 randomCoord(ship);
             }
         }
     }
-    randomCoordinatesAllShips();
 
-    function moveShips() {
+    function moveShips(shipList) {
         for (ship of shipList) {
             let randomNum = Math.random();
             // 50% chance to rotate
@@ -366,11 +399,11 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 // wont do the rotate if it messed up coordinate validity, otherwise will change rotation
                 if (ship.rotation == "horizontal") {
                     ship.rotation == "vertical";
-                    checkCoordValidity() ? ship.rotation = "vertical" : ship.rotation = "horizontal";
+                    checkCoordValidity(shipList) ? ship.rotation = "vertical" : ship.rotation = "horizontal";
                 }
                 else if (ship.rotation == "vertical") {
                     ship.rotation == "horizontal";
-                    checkCoordValidity() ? ship.rotation = "horizontal" : ship.rotation = "vertical";
+                    checkCoordValidity(shipList) ? ship.rotation = "horizontal" : ship.rotation = "vertical";
                 }
             }
             // 50% chance to move
@@ -385,14 +418,13 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 else if (ship.rotation == "vertical") {
                     ship.yCoord += shipMovementRange;
                 }
-                if (checkCoordValidity() == false || ship.xCoord < ship.size || ship.yCoord < ship.size || ship.xCoord > 20 || ship.yCoord > 20) {
+                if (checkCoordValidity(shipList) == false || ship.xCoord < ship.size || ship.yCoord < ship.size || ship.xCoord > 20 || ship.yCoord > 20) {
                     ship.xCoord = prevXCoord;
                     ship.yCoord = prevYCoord;
                 }
             }
         }
     }
-    moveShips();
 
 
 });
