@@ -1,6 +1,14 @@
 document.addEventListener(`DOMContentLoaded`, function () {
+    // global variables
     let gameMode = undefined;
+    let playerOneShipsSelected = false;
+    let playerTwoShipsSelected = false;
+    let selectingPlayerTwoShips = false;
+    let playerOneShipList = [];
+    let playerTwoShipList = [];
+    let computerShipList = [];
 
+    // game mode select screen
     let gameModeSelectScreen = document.getElementById('gameModeSelect');
     let playerButton = document.getElementById('playerButton');
     let computerButton = document.getElementById('computerButton');
@@ -15,18 +23,127 @@ document.addEventListener(`DOMContentLoaded`, function () {
         shipSelectionScreen.classList.remove("hidden");
     });
 
+    // ship select screen
     let shipSelectionScreen = document.getElementById('shipSelection');
     let shipSelectionContinueButton = document.getElementById("shipSelectionContinueButton");
+    let chosenShips = document.getElementById("chosenShips");
+    let addCarrierButton = document.getElementById("addCarrier");
+    let addDestroyerButton = document.getElementById("addDestroyer");
+    let addCruiserButton = document.getElementById("addCruiser");
+    let addBattleshipButton = document.getElementById("addBattleship");
+    let addFrigateButton = document.getElementById("addFrigate");
+    let shipAddButtons = [addCarrierButton, addDestroyerButton, addCruiserButton, addBattleshipButton, addFrigateButton];
+    for (button of shipAddButtons){
+        button.addEventListener('click', function(e){
+            // what type of ship to add to game code and html
+            let ship;
+            let shipElement = document.createElement("section");
+            let shipNameHeading = document.createElement("h4");
+            let shipRemoveButton = document.createElement("button");
+            shipRemoveButton.innerText = "-";
+
+            if (e.target.id == "addCarrier"){
+                ship = new AircraftCarrier();
+                shipNameHeading.innerText = "Aircraft Carrier";
+            }
+            else if (e.target.id == "addDestroyer"){
+                ship = new Destroyer();
+                shipNameHeading.innerText = "Destroyer";
+            }
+            else if (e.target.id == "addCruiser"){
+                ship = new Cruiser();
+                shipNameHeading.innerText = "Cruiser";
+            }
+            else if (e.target.id == "addBattleship"){
+                ship = new Battleship();
+                shipNameHeading.innerText = "Battleship";
+            }
+            else if (e.target.id == "addFrigate"){
+                ship = new Frigate();
+                shipNameHeading.innerText = "Frigate";
+            }
+            shipRemoveButton.addEventListener('click', function(){
+                if (selectingPlayerTwoShips == false){
+                    playerOneShipList.splice(playerOneShipList.indexOf(ship), 1);
+                    console.log(playerOneShipList);
+                    playerOneShipsSelected = false;
+                }
+                else{
+                    playerTwoShipList.splice(playerTwoShipList.indexOf(ship), 1);
+                    playerTwoShipsSelected = false;
+                }
+                shipElement.remove();
+            }); 
+            shipElement.appendChild(shipNameHeading);
+            shipElement.appendChild(shipRemoveButton);
+
+            // computer opponent
+            if (gameMode == "computer" && playerOneShipsSelected == false){
+                playerOneShipList.push(ship);
+                chosenShips.appendChild(shipElement);
+                if(playerOneShipList.length == 5){
+                    playerOneShipsSelected = true;
+                }
+            }
+            else if(gameMode == "computer" && playerOneShipsSelected == true){
+                alert("ships full");
+            }
+            // player vs player
+            if (gameMode == "player" && playerOneShipsSelected == false){
+                playerOneShipList.push(ship);
+                chosenShips.appendChild(shipElement);
+                if(playerOneShipList.length == 5){
+                    playerOneShipsSelected = true;
+                }
+            }
+            else if(gameMode == "player" && playerOneShipsSelected == true && selectingPlayerTwoShips == false){
+                alert("ships full");
+            }
+            else if (gameMode == "player" && playerTwoShipsSelected == false){
+                playerTwoShipList.push(ship);
+                chosenShips.appendChild(shipElement);
+                if(playerTwoShipList.length == 5){
+                    playerTwoShipsSelected = true;
+                }
+            }
+            else if(gameMode == "player" && playerTwoShipsSelected == true){
+                alert("ships full");
+            }
+        });
+    }
     shipSelectionContinueButton.addEventListener('click', function () {
-        shipSelectionScreen.classList.add("hidden");
-        gameplayScreen.classList.remove("hidden");
+        // computer opponent
+        if (gameMode == "computer" && playerOneShipsSelected == true){
+            shipSelectionScreen.classList.add("hidden");
+            gameplayScreen.classList.remove("hidden");
+        }
+        else if(gameMode == "computer" && playerOneShipsSelected == false){
+            alert("choose 5 ships");
+        }
+        //player vs player
+        if (gameMode == "player" && playerOneShipsSelected == true && selectingPlayerTwoShips == false){
+            chosenShips.innerHTML = "";
+            selectingPlayerTwoShips = true;
+        }
+        else if(gameMode == "player" && playerOneShipsSelected == false){
+            alert("choose 5 ships");
+        }
+        else if (gameMode == "player" && playerTwoShipsSelected == true){
+            shipSelectionScreen.classList.add("hidden");
+            gameplayScreen.classList.remove("hidden");
+        }
+        else if(gameMode == "player" && playerTwoShipsSelected == false){
+            alert("choose 5 ships");
+        }
     });
 
+    // gameplay screen
     let gameplayScreen = document.getElementById('gameScreen');
 
-    let instructionsButtons = document.querySelectorAll('instructionsButton');
-    let instructionsOverlay = document.querySelectorAll('instructionsOverlay');
-    let closeInstructionsOverlayButtons = document.querySelectorAll('closeInstructionsOverlay');
+    // instructions overlay
+    let instructionsButtons = document.querySelectorAll('.instructionsButton');
+    let instructionsOverlay = document.querySelectorAll('.instructionsOverlay');
+    let closeInstructionsOverlayButtons = document.querySelectorAll('.closeInstructionsOverlay');
     for (button of instructionsButtons) {
         button.addEventListener('click', function () {
             for (overlay of instructionsOverlay) {
@@ -104,7 +221,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             this.size = 5;
             this.xCoord = undefined;
             this.yCoord = undefined;
-            this.rotation = "horizontal";
+            this.rotation = undefined;
             this.speed = 1;
         }
     }
@@ -114,7 +231,37 @@ document.addEventListener(`DOMContentLoaded`, function () {
             this.size = 4;
             this.xCoord = undefined;
             this.yCoord = undefined;
-            this.rotation = "vertical";
+            this.rotation = undefined;
+            this.speed = 2;
+        }
+    }
+    class Cruiser {
+        constructor() {
+            this.name = "Cruiser";
+            this.size = 5;
+            this.xCoord = undefined;
+            this.yCoord = undefined;
+            this.rotation = undefined;
+            this.speed = 1;
+        }
+    }
+    class Battleship {
+        constructor() {
+            this.name = "Battleship";
+            this.size = 4;
+            this.xCoord = undefined;
+            this.yCoord = undefined;
+            this.rotation = undefined;
+            this.speed = 2;
+        }
+    }
+    class Frigate {
+        constructor() {
+            this.name = "Frigate";
+            this.size = 4;
+            this.xCoord = undefined;
+            this.yCoord = undefined;
+            this.rotation = undefined;
             this.speed = 2;
         }
     }
@@ -154,8 +301,17 @@ document.addEventListener(`DOMContentLoaded`, function () {
         }
     }
 
-    // Generates a random coordinate for the ship, makes sure ship does not escape grid
+    // Generates a random coordinate and rotation for the ship, makes sure ship does not escape grid
     function randomCoord(inputShip) {
+        // random rotation
+        let randomNum = Math.random();
+        if (randomNum < 0.5){
+            inputShip.rotation = "horizontal";
+        }
+        else{
+            inputShip.rotation = "vertical";
+        }
+        // random coord
         if (inputShip.rotation == "horizontal") {
             inputShip.xCoord = rng();
             while (inputShip.xCoord < inputShip.size) {
