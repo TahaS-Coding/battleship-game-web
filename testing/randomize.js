@@ -1,5 +1,14 @@
+function a() {
+    let a = 0;
+    let b = 0;
+    let array = [];
+    for (let i = 0; i < 3; i++) {
+        a += i;
+        for (let i = 0; i < 3; i++) {
+            array.push(`x${a}y${b + (i)}`)
+        }
+    }
+    console.log(array)
 
-
-// create array of squareId clicked
-// run it through shipCoord.indexOf
-// make a code that create an array for ship coords
+}
+a()

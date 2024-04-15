@@ -24,6 +24,9 @@ document.addEventListener(`DOMContentLoaded`, function () {
 
     let gameplayScreen = document.getElementById('gameScreen');
 
+    // This is the one
+    gameplayScreen.classList.remove("hidden");
+
     let instructionsButtons = document.querySelectorAll('instructionsButton');
     let instructionsOverlay = document.querySelectorAll('instructionsOverlay');
     let closeInstructionsOverlayButtons = document.querySelectorAll('closeInstructionsOverlay');
@@ -56,15 +59,18 @@ document.addEventListener(`DOMContentLoaded`, function () {
             newSquare.classList.add("squares");
 
 
-
-            // when square clicked
+            // When square on grid is clicked check if it hit any ship
             newSquare.addEventListener("click", function () {
                 // Gets coordinates of clicked square
                 let clickedSqrID = this.getAttribute("id");
-                let abilityActive = abilityTrueOrFalse();
+                let abilityActive = whichAbility();
+                console.log(abilityActive[1])
+                console.log(abilityActive[0])
                 if (abilityActive[0] === true) {
-                    let arrayOfCoordinates = abilities()
-                    selectedCoordinate(abilityActive[1]);
+                    let arrayOfCoordinates = abilities(clickedSqrID, abilityActive[1]);
+                    for (coord of arrayOfCoordinates) {
+                        selectedCoordinate(coord);
+                    }
                 } else {
                     selectedCoordinate(clickedSqrID);
                 }
@@ -121,11 +127,11 @@ document.addEventListener(`DOMContentLoaded`, function () {
         }
     }
 
-    function abilityTrueOrFalse() {
+    function whichAbility() {
         for (abilityID of abilitiesList) {
             let shipAbility = document.getElementById(`${abilityID}`)
             if (shipAbility.name === `on`) {
-                return [true, shipAbility];
+                return [true, abilityID];
             }
         }
         return [false];
@@ -155,7 +161,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             this.abilityName = `Torpedo`;
         }
     }
-    let shipList = [new AircraftCarrier(), new Destroyer()];
+    let shipList = [new AircraftCarrier(), new Destroyer(), new Frigate(), new Battleship(), new Auxillary()];
     let abilitiesList = [];
     // Creates buttons for the ability
     // It also turn the ability on and off based on click
@@ -200,7 +206,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
     createButtons()
 
     // Generate coordinates for the ability 
-    function abilities(coordinate) {
+    function abilities(coordinate, abilityName) {
         // Splits coordianate into x and y
         let splitID = coordinate.match(/\d+/g);
         let sqrXCoord = null;
@@ -214,10 +220,48 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 sqrYCoord = num;
             }
         }
-
-        return [sqrXCoord, sqrYCoord]
+        let coordinatesArray = [];
+        switch (abilityName) {
+            case `Airplane`:
+                for (let i = 0; i < 3; i++) {
+                    sqrXCoord += i;
+                    for (let i = 0; i < 3; i++) {
+                        coordinatesArray.push(`x${sqrXCoord}y${sqrYCoord + (i)}`)
+                    }
+                };
+                break;
+            case `Torpedo`:
+                for (let i = 0; i < 5; i++) {
+                    coordinatesArray.push(`x${sqrXCoord}y${sqrYCoord + i}`)
+                };
+                break;
+            case `Scout`:
+                for (let i = 0; i < 20; i++) {
+                    sqrXCoord = sqrXCoord + i;
+                    for (let i = 0; i < 20; i++) {
+                        coordinatesArray.push(`x${sqrXCoord}y${sqrYCoord + i}`)
+                    }
+                };
+                break;
+            case `Missile`:
+                for (let i = 0; i < 2; i++) {
+                    sqrXCoord += i;
+                    for (let i = 0; i < 2; i++) {
+                        coordinatesArray.push(`x${sqrXCoord}y${sqrYCoord + (i)}`)
+                    }
+                };
+                break;
+            case `Bombardment`:
+                for (let i = 0; i < 5; i++) {
+                    sqrXCoord += i;
+                    for (let i = 0; i < 3; i++) {
+                        coordinatesArray.push(`x${sqrXCoord}y${sqrYCoord + (i)}`)
+                    }
+                };
+                break;
+        }
+        return coordinatesArray;
     }
-    console.log(abilities(`x2y2`))
 
     // generates random number 1 - 20
     function rng() {
@@ -293,7 +337,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             }
             // 50% chance to move
             else {
-                // wont move if it messed up coordinate validity. Can move the amount of squares equivalent to or less than ship.speed value in its rotations direction
+                // Won't move if it messed up coordinate validity. Can move the amount of squares equivalent to or less than ship.speed value in its rotations direction
                 let shipMovementRange = Math.floor(Math.random() * (ship.speed - (ship.speed * -1) + 1)) + (ship.speed * -1);
                 let prevXCoord = ship.xCoord;
                 let prevYCoord = ship.yCoord;
