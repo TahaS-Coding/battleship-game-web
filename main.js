@@ -7,6 +7,8 @@ document.addEventListener(`DOMContentLoaded`, function () {
     let playerOneShipList = [];
     let playerTwoShipList = [];
     let computerShipList = [];
+    let playerOneAbilityList = [];
+    let playerTwoAbilityList = [];
     let player = "p1";
 
     // game mode select screen
@@ -118,6 +120,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             shipSelectionScreen.classList.add("hidden");
             gameplayScreen.classList.remove("hidden");
             createOverlays();
+            createButtons(playerOneShipList, playerOneAbilityList, playerOneAbilityListHTML);
             randomCoordinatesAllShips(playerOneShipList);
             randomCoordinatesAllShips(computerShipList);
         }
@@ -136,6 +139,8 @@ document.addEventListener(`DOMContentLoaded`, function () {
             shipSelectionScreen.classList.add("hidden");
             gameplayScreen.classList.remove("hidden");
             createOverlays();
+            createButtons(playerOneShipList, playerOneAbilityList, playerOneAbilityListHTML);
+            createButtons(playerTwoShipList, playerTwoAbilityList, playerTwoAbilityListHTML);
             randomCoordinatesAllShips(playerOneShipList);
             randomCoordinatesAllShips(playerTwoShipList);
         }
@@ -150,7 +155,38 @@ document.addEventListener(`DOMContentLoaded`, function () {
     let playerTwoOverlayBoard = document.getElementById("gameBoardOverlayPlayerTwo");
     let playerOneGrid = document.getElementById("playerOneGrid");
     let playerTwoGrid = document.getElementById("playerTwoGrid");
-
+    let playerOneAbilityListHTML = document.getElementById('playerOneAbilityList');
+    let playerTwoAbilityListHTML = document.getElementById('playerTwoAbilityList');
+    //ABILITIES
+    // Creates buttons for the ability
+    // It also turn the ability on and off based on click
+    function createButtons(shipList, abilitiesList, abilityList) {
+        let cancelButton = document.createElement(`button`);
+        cancelButton.setAttribute("id", "cancel");
+        cancelButton.innerHTML = `Cancel`;
+        for (ship of shipList) {
+            let abilityName = ship.abilityName;
+            abilitiesList.push(abilityName);
+            let abilityButton = document.createElement("button");
+            abilityButton.setAttribute("id", abilityName);
+            abilityButton.setAttribute("name", `off`);
+            abilityButton.classList.add("ability");
+            abilityButton.innerHTML = abilityName;
+            abilityList.appendChild(abilityButton);
+            // Which ever ability gets click, the name will change to on
+            // This will determine which ability is being used
+            abilityButton.addEventListener(`click`, function () {
+                // Set the name to off for all the buttons
+                // This prevents having multiple abilities being actives
+                for (ship of shipList) {
+                    let abilityId = ship.abilityName;
+                    let abilityBttn = document.getElementById(`${abilityId}`)
+                    abilityBttn.setAttribute("name", "off")
+                }
+                abilityButton.setAttribute("name", "on");
+            })
+        };
+    }
     // instructions overlay
     let instructionsButtons = document.querySelectorAll('.instructionsButton');
     let instructionsOverlay = document.querySelectorAll('.instructionsOverlay');
