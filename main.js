@@ -160,13 +160,13 @@ document.addEventListener(`DOMContentLoaded`, function () {
     //ABILITIES
     // Creates buttons for the ability
     // It also turn the ability on and off based on click
-    function createButtons(shipList, abilitiesList, abilityList) {
+    function createButtons(shipList, ablitityArray, abilityList) {
         let cancelButton = document.createElement(`button`);
         cancelButton.setAttribute("id", "cancel");
         cancelButton.innerHTML = `Cancel`;
         for (ship of shipList) {
             let abilityName = ship.abilityName;
-            abilitiesList.push(abilityName);
+            ablitityArray.push(abilityName);
             let abilityButton = document.createElement("button");
             abilityButton.setAttribute("id", abilityName);
             abilityButton.setAttribute("name", `off`);
@@ -310,55 +310,64 @@ document.addEventListener(`DOMContentLoaded`, function () {
 
     }
 
-
     class AircraftCarrier {
         constructor() {
             this.name = "AircraftCarrier";
             this.size = 5;
+            this.health = 6;
+            this.speed = 1;
             this.xCoord = undefined;
             this.yCoord = undefined;
             this.rotation = undefined;
-            this.speed = 1;
+            this.abilityName = `Airplane`;
         }
     }
     class Destroyer {
         constructor() {
             this.name = "Destroyer";
             this.size = 4;
+            this.health = 6;
+            this.speed = 2;
             this.xCoord = undefined;
             this.yCoord = undefined;
             this.rotation = undefined;
-            this.speed = 2;
+            this.abilityName = `Torpedo`;
         }
     }
     class Cruiser {
         constructor() {
             this.name = "Cruiser";
             this.size = 5;
+            this.health = 6;
+            this.speed = 1;
             this.xCoord = undefined;
             this.yCoord = undefined;
             this.rotation = undefined;
-            this.speed = 1;
+            this.abilityName = `Missile`;
         }
     }
     class Battleship {
         constructor() {
             this.name = "Battleship";
             this.size = 4;
+            this.health = 6;
+            this.speed = 2;
             this.xCoord = undefined;
             this.yCoord = undefined;
             this.rotation = undefined;
-            this.speed = 2;
+            this.abilityName = `Bombardment`;
         }
     }
     class Frigate {
         constructor() {
             this.name = "Frigate";
             this.size = 4;
+            this.health = 6;
+            this.speed = 2;
             this.xCoord = undefined;
             this.yCoord = undefined;
             this.rotation = undefined;
-            this.speed = 2;
+            this.abilityName = `Scout`;
         }
     }
 
