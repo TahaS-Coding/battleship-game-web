@@ -99,21 +99,23 @@ document.addEventListener(`DOMContentLoaded`, function () {
 
         let scout = document.getElementById(`Scout`);
         if (scout.name === `on`) {
-            respond();
+            let number = (Math.floor(Math.random() * shipList.length))
+            let foundShip = shipList[number];
+            console.log(`${foundShip.name} located at x${foundShip.xCoord}y${foundShip.yCoord}`)
+            return `${foundShip.name} located at x${foundShip.xCoord}y${foundShip.yCoord}`;
         } else {
             // Sees if ship is on that coordinate
             for (let ship of shipList) {
                 if (ship.rotation == "horizontal" && ship.yCoord == sqrYCoord) {
                     if (sqrXCoord <= ship.xCoord && sqrXCoord > ship.xCoord - ship.size) {
-                        respond(ship.name, coordinate);
+                        return `${foundShip.name} located at x${foundShip.xCoord}y${foundShip.yCoord}`;
                     }
                 }
                 else if (ship.rotation == "vertical" && ship.xCoord == sqrXCoord) {
                     if (sqrYCoord <= ship.yCoord && sqrYCoord > ship.yCoord - ship.size) {
-                        respond(ship.name, coordinate);
                     }
                 } else {
-                    respond();
+                    return (`hit ${shipName} at ${coordinate}`);
                 }
             }
         }
