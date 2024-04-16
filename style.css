@@ -4,16 +4,30 @@
     padding: 0;
 }
 
-
-
-.gameBoardOverlay{
-    display: flex;
-    flex-flow: row wrap;
+.game-board-overlay{
     width: 50%;
     margin: auto;
-    height: 50vh;
 }
-.gameBoardOverlay button{
+.game-board-overlay h1{
+    text-align: center;
+}
+.overlay-two-column{
+    display: flex;
+    flex-flow: row nowrap;
+}
+.column-left{
+    width: 25%;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.column-right{
+    width: 75%;
+    height: 50vh;
+    display: flex;
+    flex-flow: row wrap;
+}
+.column-right button{
     width: 7.69%;
     border: solid 1px black;
 }

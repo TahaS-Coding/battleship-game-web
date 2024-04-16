@@ -148,6 +148,8 @@ document.addEventListener(`DOMContentLoaded`, function () {
     let gameplayScreen = document.getElementById('gameScreen');
     let playerOneOverlayBoard = document.getElementById("gameBoardOverlayPlayerOne");
     let playerTwoOverlayBoard = document.getElementById("gameBoardOverlayPlayerTwo");
+    let playerOneGrid = document.getElementById("playerOneGrid");
+    let playerTwoGrid = document.getElementById("playerTwoGrid");
 
     // instructions overlay
     let instructionsButtons = document.querySelectorAll('.instructionsButton');
@@ -212,11 +214,11 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 });
 
                 if (gameMode == "player") {
-                    playerOneOverlayBoard.appendChild(newSquare);
-                    playerTwoOverlayBoard.appendChild(newSquareClone);
+                    playerOneGrid.appendChild(newSquare);
+                    playerTwoGrid.appendChild(newSquareClone);
                 }
                 else {
-                    playerOneOverlayBoard.appendChild(newSquare);
+                    playerOneGrid.appendChild(newSquare);
                 }
             }
         }
