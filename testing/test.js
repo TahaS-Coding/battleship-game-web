@@ -64,15 +64,15 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 // Gets coordinates of clicked square
                 let clickedSqrID = this.getAttribute("id");
                 let abilityActive = whichAbility();
-                console.log(abilityActive[1])
-                console.log(abilityActive[0])
                 if (abilityActive[0] === true) {
                     let arrayOfCoordinates = abilities(clickedSqrID, abilityActive[1]);
                     for (coord of arrayOfCoordinates) {
-                        selectedCoordinate(coord);
-                    }
+                        hitCoordinate(coord);
+                    };
+
                 } else {
-                    selectedCoordinate(clickedSqrID);
+                    console.log(hitCoordinate(clickedSqrID))
+                    hitCoordinate(clickedSqrID);
                 }
             });
             gameBoardOverlay.appendChild(newSquare);
@@ -83,7 +83,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
 
 
     // Check if coordinate hits any ship
-    function selectedCoordinate(coordinate) {
+    function hitCoordinate(coordinate) {
         let splitID = coordinate.match(/\d+/g);
         let sqrXCoord = null;
         let sqrYCoord = null;
@@ -97,19 +97,24 @@ document.addEventListener(`DOMContentLoaded`, function () {
             }
         }
 
-        // Sees if ship is on that coordinate
-        for (let ship of shipList) {
-            if (ship.rotation == "horizontal" && ship.yCoord == sqrYCoord) {
-                if (sqrXCoord <= ship.xCoord && sqrXCoord > ship.xCoord - ship.size) {
-                    respond(ship.name, coordinate);
+        let scout = document.getElementById(`Scout`);
+        if (scout.name === `on`) {
+            respond();
+        } else {
+            // Sees if ship is on that coordinate
+            for (let ship of shipList) {
+                if (ship.rotation == "horizontal" && ship.yCoord == sqrYCoord) {
+                    if (sqrXCoord <= ship.xCoord && sqrXCoord > ship.xCoord - ship.size) {
+                        respond(ship.name, coordinate);
+                    }
                 }
-            }
-            else if (ship.rotation == "vertical" && ship.xCoord == sqrXCoord) {
-                if (sqrYCoord <= ship.yCoord && sqrYCoord > ship.yCoord - ship.size) {
-                    respond(ship.name, coordinate);
+                else if (ship.rotation == "vertical" && ship.xCoord == sqrXCoord) {
+                    if (sqrYCoord <= ship.yCoord && sqrYCoord > ship.yCoord - ship.size) {
+                        respond(ship.name, coordinate);
+                    }
+                } else {
+                    respond();
                 }
-            } else {
-                respond();
             }
         }
     }
@@ -117,13 +122,21 @@ document.addEventListener(`DOMContentLoaded`, function () {
     // Changes output based on what happen (i.e., abilities)
     // add a else if for abilities
     function respond(shipName, coordinate) {
-        if (shipName === undefined) {
-            console.log(`Nothing hit`);
-            return `Nothing hit`;
+        // Scout is an ability that locates the position of a random ship
+        let scout = document.getElementById(`Scout`);
+        if (scout.name === `on`) {
+            let number = (Math.floor(Math.random() * shipList.length))
+            let foundShip = shipList[number];
+            console.log(`${foundShip.name} located at x${foundShip.xCoord}y${foundShip.yCoord}`)
+            return `${foundShip.name} located at x${foundShip.xCoord}y${foundShip.yCoord}`;
         } else {
-            ship.health--;
-            console.log(`hit ${shipName} at ${coordinate}`);
-            return (`hit ${shipName} at ${coordinate}`);
+            if (shipName === undefined) {
+                return `Nothing hit`;
+            } else {
+                ship.health--;
+                console.log(`hit ${shipName} at ${coordinate}`);
+                return (`hit ${shipName} at ${coordinate}`);
+            }
         }
     }
 
@@ -146,7 +159,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             this.speed = 1;
             this.xCoord = undefined;
             this.yCoord = undefined;
-            this.rotation = "horizontal";
+            this.rotation = undefined;
             this.abilityName = `Airplane`;
         }
     }
@@ -154,14 +167,51 @@ document.addEventListener(`DOMContentLoaded`, function () {
         constructor() {
             this.name = "Destroyer";
             this.size = 4;
+            this.health = 6;
             this.speed = 2;
             this.xCoord = undefined;
             this.yCoord = undefined;
-            this.rotation = "vertical";
+            this.rotation = undefined;
             this.abilityName = `Torpedo`;
         }
     }
-    let shipList = [new AircraftCarrier(), new Destroyer(), new Frigate(), new Battleship(), new Auxillary()];
+    class Cruiser {
+        constructor() {
+            this.name = "Cruiser";
+            this.size = 5;
+            this.health = 6;
+            this.speed = 1;
+            this.xCoord = undefined;
+            this.yCoord = undefined;
+            this.rotation = undefined;
+            this.abilityName = `Missile`;
+        }
+    }
+    class Battleship {
+        constructor() {
+            this.name = "Battleship";
+            this.size = 4;
+            this.health = 6;
+            this.speed = 2;
+            this.xCoord = undefined;
+            this.yCoord = undefined;
+            this.rotation = undefined;
+            this.abilityName = `Bombardment`;
+        }
+    }
+    class Frigate {
+        constructor() {
+            this.name = "Frigate";
+            this.size = 4;
+            this.health = 6;
+            this.speed = 2;
+            this.xCoord = undefined;
+            this.yCoord = undefined;
+            this.rotation = undefined;
+            this.abilityName = `Scout`;
+        }
+    }
+    let shipList = [new AircraftCarrier(), new Destroyer(), new Cruiser(), new Battleship(), new Frigate()];
     let abilitiesList = [];
     // Creates buttons for the ability
     // It also turn the ability on and off based on click
@@ -236,12 +286,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 };
                 break;
             case `Scout`:
-                for (let i = 0; i < 20; i++) {
-                    sqrXCoord = sqrXCoord + i;
-                    for (let i = 0; i < 20; i++) {
-                        coordinatesArray.push(`x${sqrXCoord}y${sqrYCoord + i}`)
-                    }
-                };
+                coordinatesArray.push(`x${0}y${0}`)
                 break;
             case `Missile`:
                 for (let i = 0; i < 2; i++) {
@@ -273,6 +318,12 @@ document.addEventListener(`DOMContentLoaded`, function () {
 
     // Generates a random coordinate for the ship, makes sure ship does not escape grid
     function randomCoord(inputShip) {
+        // Ship rotation is undefined, so this will define it
+        if (rng >= 10) {
+            inputShip.rotation = `horizontal`;
+        } else {
+            inputShip.rotation = `vertical`
+        }
         if (inputShip.rotation == "horizontal") {
             inputShip.xCoord = rng();
             while (inputShip.xCoord < inputShip.size) {
@@ -287,8 +338,9 @@ document.addEventListener(`DOMContentLoaded`, function () {
             }
             inputShip.xCoord = rng();
         }
-        console.log(inputShip);
     }
+
+
     // returns true if no Coordinates overlap, false if any Coordinates do
     function checkCoordValidity() {
         let allOccupiedSquares = [];
