@@ -14,7 +14,7 @@
     height: 50vh;
 }
 .gameBoardOverlay button{
-    width: 5%;
+    width: 7.69%;
     border: solid 1px black;
 }
 .gameBoardOverlay button:hover{

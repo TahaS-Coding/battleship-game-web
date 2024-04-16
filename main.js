@@ -119,7 +119,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             gameplayScreen.classList.remove("hidden");
             createOverlays();
             randomCoordinatesAllShips(playerOneShipList);
-            randomCoordinatesAllShips(playerTwoShipList);
+            randomCoordinatesAllShips(computerShipList);
         }
         else if(gameMode == "computer" && playerOneShipsSelected == false){
             alert("choose 5 ships");
@@ -137,7 +137,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             gameplayScreen.classList.remove("hidden");
             createOverlays();
             randomCoordinatesAllShips(playerOneShipList);
-            randomCoordinatesAllShips(computerShipList);
+            randomCoordinatesAllShips(playerTwoShipList);
         }
         else if(gameMode == "player" && playerTwoShipsSelected == false){
             alert("choose 5 ships");
@@ -173,8 +173,8 @@ document.addEventListener(`DOMContentLoaded`, function () {
 
     // 2 for loops to create a 2d array for the overlay board(s)
     function createOverlays(){
-        for (rows = 20; rows > 0; rows--) {
-            for (columns = 1; columns < 21; columns++) {
+        for (rows = 13; rows > 0; rows--) {
+            for (columns = 1; columns < 14; columns++) {
                 // Creates button elements with unique coordinate id's, hit detection, as children of overlay
                 let sqrID = `x${columns}y${rows}`;
                 let newSquare = document.createElement("button");
@@ -209,10 +209,6 @@ document.addEventListener(`DOMContentLoaded`, function () {
                         playerOneOverlayBoard.classList.remove("hidden");
                         player = "p1";
                     }
-                    else if (gameMode == "computer"){
-                        computerStuff();
-                    }
-    
                 });
 
                 if (gameMode == "player"){
@@ -328,9 +324,9 @@ document.addEventListener(`DOMContentLoaded`, function () {
         }
     }
 
-    // generates random number 1 - 20
+    // generates random number 1 - 13
     function rng() {
-        let rng = Math.floor((Math.random() * 20) + 1);
+        let rng = Math.floor((Math.random() * 13) + 1);
         return rng;
     }
 
@@ -418,7 +414,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 else if (ship.rotation == "vertical") {
                     ship.yCoord += shipMovementRange;
                 }
-                if (checkCoordValidity(shipList) == false || ship.xCoord < ship.size || ship.yCoord < ship.size || ship.xCoord > 20 || ship.yCoord > 20) {
+                if (checkCoordValidity(shipList) == false || ship.xCoord < ship.size || ship.yCoord < ship.size || ship.xCoord > 13 || ship.yCoord > 13) {
                     ship.xCoord = prevXCoord;
                     ship.yCoord = prevYCoord;
                 }
