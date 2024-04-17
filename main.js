@@ -158,35 +158,107 @@ document.addEventListener(`DOMContentLoaded`, function () {
     let playerOneAbilityListHTML = document.getElementById('playerOneAbilityList');
     let playerTwoAbilityListHTML = document.getElementById('playerTwoAbilityList');
     //ABILITIES
-    // Creates buttons for the ability
-    // It also turn the ability on and off based on click
     function createButtons(shipList, ablitityArray, abilityList) {
-        let cancelButton = document.createElement(`button`);
-        cancelButton.setAttribute("id", "cancel");
-        cancelButton.innerHTML = `Cancel`;
-        for (ship of shipList) {
-            let abilityName = ship.abilityName;
-            ablitityArray.push(abilityName);
-            let abilityButton = document.createElement("button");
-            abilityButton.setAttribute("id", abilityName);
-            abilityButton.setAttribute("name", `off`);
-            abilityButton.classList.add("ability");
-            abilityButton.innerHTML = abilityName;
-            abilityList.appendChild(abilityButton);
-            // Which ever ability gets click, the name will change to on
-            // This will determine which ability is being used
-            abilityButton.addEventListener(`click`, function () {
-                // Set the name to off for all the buttons
-                // This prevents having multiple abilities being actives
-                for (ship of shipList) {
-                    let abilityId = ship.abilityName;
-                    let abilityBttn = document.getElementById(`${abilityId}`)
-                    abilityBttn.setAttribute("name", "off")
-                }
-                abilityButton.setAttribute("name", "on");
-            })
-        };
+        let airplane = 0;
+        let torpedo = 0;
+        let missile = 0;
+        let bombardment = 0;
+        let scout = 0;
+        // create array of all abilities
+        for (let ship of shipList) {
+            ablitityArray.push(ship.abilityName);
+        }
+        // how many of each ability
+        for (let ability of ablitityArray) {
+            switch (ability) {
+                case "Airplane":
+                    airplane += 1;
+                    break;
+                case "Torpedo":
+                    torpedo += 1;
+                    break;
+                case "Missile":
+                    missile += 1;
+                    break;
+                case "Bombardment":
+                    bombardment += 1;
+                    break;
+                case "Scout":
+                    scout += 1;
+                    break;
+            }
+        }
+        // add abilities to players list
+        if (airplane > 0) {
+            let airplaneAbilityButton = document.createElement("button");
+            airplaneAbilityButton.setAttribute("name", "off");
+            airplaneAbilityButton.innerText = airplane;
+            airplaneAbilityButton.addEventListener("click", function () {
+                abilityButtonBehavior(airplaneAbilityButton, abilityList);
+            });
+            abilityList.appendChild(airplaneAbilityButton);
+        }
+        if (torpedo > 0) {
+            let torpedoAbilityButton = document.createElement("button");
+            torpedoAbilityButton.setAttribute("name", "off");
+            torpedoAbilityButton.innerText = torpedo;
+            torpedoAbilityButton.addEventListener("click", function () {
+                abilityButtonBehavior(torpedoAbilityButton, abilityList);
+            });
+            abilityList.appendChild(torpedoAbilityButton);
+        }
+        if (missile > 0) {
+            let missileAbilityButton = document.createElement("button");
+            missileAbilityButton.setAttribute("name", "off");
+            missileAbilityButton.innerText = missile;
+            missileAbilityButton.addEventListener("click", function () {
+                abilityButtonBehavior(missileAbilityButton, abilityList);
+            });
+            abilityList.appendChild(missileAbilityButton);
+        }
+        if (bombardment > 0) {
+            let bombardmentAbilityButton = document.createElement("button");
+            bombardmentAbilityButton.setAttribute("name", "off");
+            bombardmentAbilityButton.innerText = bombardment;
+            bombardmentAbilityButton.addEventListener("click", function () {
+                abilityButtonBehavior(bombardmentAbilityButton, abilityList);
+            });
+            abilityList.appendChild(bombardmentAbilityButton);
+        }
+        if (scout > 0) {
+            let scoutAbilityButton = document.createElement("button");
+            scoutAbilityButton.setAttribute("name", "off");
+            scoutAbilityButton.innerText = scout;
+            scoutAbilityButton.addEventListener("click", function () {
+                abilityButtonBehavior(scoutAbilityButton, abilityList);
+            });
+            abilityList.appendChild(scoutAbilityButton);
+        }
     }
+    function abilityButtonBehavior(button, abilityList) {
+        let abilityUsesLeft = Number(button.innerText);
+        let anyAbilityActive = false;
+        //are any abilities already active excluding the clicked button
+        for (let abilityButton of abilityList.children) {
+            if (abilityButton.name == "on" && abilityButton != button) {
+                anyAbilityActive = false;
+                console.log("other button active");
+            }
+        }
+        // if not button can change states
+        if (anyAbilityActive == false) {
+            if (button.name == "on") {
+                button.name = "off";
+                button.innerText = abilityUsesLeft + 1;
+            }
+            else if (button.name == "off" && abilityUsesLeft > 0) {
+                button.name = "on";
+                button.innerText = abilityUsesLeft - 1;
+            }
+        }
+    }
+
+
     // instructions overlay
     let instructionsButtons = document.querySelectorAll('.instructionsButton');
     let instructionsOverlay = document.querySelectorAll('.instructionsOverlay');
