@@ -241,8 +241,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         //are any abilities already active excluding the clicked button
         for (let abilityButton of abilityList.children) {
             if (abilityButton.name == "on" && abilityButton != button) {
-                anyAbilityActive = false;
-                console.log("other button active");
+                anyAbilityActive = true;
             }
         }
         // if not button can change states
