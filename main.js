@@ -385,7 +385,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         constructor() {
             this.name = "AircraftCarrier";
             this.size = 5;
-            this.health = 6;
+            this.health = 5;
             this.speed = 1;
             this.xCoord = undefined;
             this.yCoord = undefined;
@@ -397,7 +397,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         constructor() {
             this.name = "Destroyer";
             this.size = 4;
-            this.health = 6;
+            this.health = 4;
             this.speed = 2;
             this.xCoord = undefined;
             this.yCoord = undefined;
@@ -408,9 +408,9 @@ document.addEventListener(`DOMContentLoaded`, function () {
     class Cruiser {
         constructor() {
             this.name = "Cruiser";
-            this.size = 5;
-            this.health = 6;
-            this.speed = 1;
+            this.size = 4;
+            this.health = 4;
+            this.speed = 2;
             this.xCoord = undefined;
             this.yCoord = undefined;
             this.rotation = undefined;
@@ -420,9 +420,9 @@ document.addEventListener(`DOMContentLoaded`, function () {
     class Battleship {
         constructor() {
             this.name = "Battleship";
-            this.size = 4;
-            this.health = 6;
-            this.speed = 2;
+            this.size = 5;
+            this.health =  5;
+            this.speed = 1;
             this.xCoord = undefined;
             this.yCoord = undefined;
             this.rotation = undefined;
@@ -432,9 +432,9 @@ document.addEventListener(`DOMContentLoaded`, function () {
     class Frigate {
         constructor() {
             this.name = "Frigate";
-            this.size = 4;
-            this.health = 6;
-            this.speed = 2;
+            this.size = 3;
+            this.health = 3;
+            this.speed = 3;
             this.xCoord = undefined;
             this.yCoord = undefined;
             this.rotation = undefined;
