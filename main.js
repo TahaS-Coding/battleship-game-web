@@ -380,6 +380,53 @@ document.addEventListener(`DOMContentLoaded`, function () {
     function computerStuff() {
 
     }
+    function attack(shipList){
+        let abilityList;
+        if(shipList == playerOneShipList){
+            abilityList = playerOneAbilityListHTML;
+        }
+        else{
+            abilityList = playerTwoAbilityListHTML;
+        }
+        let activeAbility;
+        for (let abilityButton of abilityList.children){
+            if(abilityButton.name == "on"){
+                switch (abilityButton){
+                    case airplaneAbilityButton:
+                        activeAbility == "airplane";
+                        break;
+                    case torpedoAbilityButton:
+                        activeAbility == "torpedo";
+                        break;
+                    case missileAbilityButton:
+                        activeAbility == "missile";
+                        break;
+                    case bombardmentAbilityButton:
+                        activeAbility == "bombardment";
+                        break;
+                    default: 
+                        activeAbility == "none";
+                        break;
+                }
+            }
+        }
+
+        for (let ship of shipList) {
+            if (ship.rotation == "horizontal" && ship.yCoord == sqrYCoord) {
+                if (sqrXCoord <= ship.xCoord && sqrXCoord > ship.xCoord - ship.size) {
+                    ship.health--;
+                    console.log(`hit ${ship.name} at ${coordinate}`);
+                }
+            }
+            else if (ship.rotation == "vertical" && ship.xCoord == sqrXCoord) {
+                if (sqrYCoord <= ship.yCoord && sqrYCoord > ship.yCoord - ship.size) {
+                    ship.health--;
+                    console.log(`hit ${ship.name} at ${coordinate}`);
+                }
+            }
+        }
+    }
+
 
     class AircraftCarrier {
         constructor() {
@@ -508,8 +555,8 @@ document.addEventListener(`DOMContentLoaded`, function () {
     function moveShips(shipList) {
         for (ship of shipList) {
             let randomNum = Math.random();
-            // 50% chance to rotate
-            if (randomNum < 0.5) {
+            // 25% chance to rotate
+            if (randomNum < 0.25) {
                 // wont do the rotate if it messed up coordinate validity, otherwise will change rotation
                 if (ship.rotation == "horizontal") {
                     ship.rotation == "vertical";
