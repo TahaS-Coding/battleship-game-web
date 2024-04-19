@@ -380,7 +380,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
     function computerStuff() {
 
     }
-    function attack(shipList){
+    function attack(shipList, sqrXCoord, sqrYCoord){
         let abilityList;
         if(shipList == playerOneShipList){
             abilityList = playerOneAbilityListHTML;
@@ -410,20 +410,25 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 }
             }
         }
+        let arraOfHitCoordinates;
+        switch(activeAbility){
+            case "airplane":
 
-        for (let ship of shipList) {
-            if (ship.rotation == "horizontal" && ship.yCoord == sqrYCoord) {
-                if (sqrXCoord <= ship.xCoord && sqrXCoord > ship.xCoord - ship.size) {
-                    ship.health--;
-                    console.log(`hit ${ship.name} at ${coordinate}`);
-                }
-            }
-            else if (ship.rotation == "vertical" && ship.xCoord == sqrXCoord) {
-                if (sqrYCoord <= ship.yCoord && sqrYCoord > ship.yCoord - ship.size) {
-                    ship.health--;
-                    console.log(`hit ${ship.name} at ${coordinate}`);
-                }
-            }
+                break;
+            case "torpedo":
+                
+                break;
+            case "missile":
+                
+                break;
+            case "bombardment":
+                
+                break;
+            case "none":
+                
+                break;
+
+
         }
     }
 
