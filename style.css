@@ -4,6 +4,10 @@
     padding: 0;
 }
 
+body {
+    background-color: rgb(86, 86, 86);
+}
+
 .hidden {
     display: none !important;
 }
@@ -148,6 +152,13 @@ canvas {
     flex-flow: column;
 }
 
-.shipOption {
+.shipSelectionSection {
+    display: flex;
+    flex-flow: row wrap;
+}
 
+.shipOptions {
+    display: flex;
+    flex-flow: column wrap;
+    flex-basis: 50%;
 }
