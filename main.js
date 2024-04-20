@@ -192,6 +192,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         if (airplane > 0) {
             let airplaneAbilityButton = document.createElement("button");
             airplaneAbilityButton.setAttribute("name", "off");
+            airplaneAbilityButton.setAttribute("id", "airplaneAbilityButton");
             airplaneAbilityButton.innerText = airplane;
             airplaneAbilityButton.addEventListener("click", function () {
                 abilityButtonBehavior(airplaneAbilityButton, abilityList);
@@ -201,6 +202,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         if (torpedo > 0) {
             let torpedoAbilityButton = document.createElement("button");
             torpedoAbilityButton.setAttribute("name", "off");
+            torpedoAbilityButton.setAttribute("id", "torpedoAbilityButton");
             torpedoAbilityButton.innerText = torpedo;
             torpedoAbilityButton.addEventListener("click", function () {
                 abilityButtonBehavior(torpedoAbilityButton, abilityList);
@@ -210,6 +212,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         if (missile > 0) {
             let missileAbilityButton = document.createElement("button");
             missileAbilityButton.setAttribute("name", "off");
+            missileAbilityButton.setAttribute("id", "missileAbilityButton");
             missileAbilityButton.innerText = missile;
             missileAbilityButton.addEventListener("click", function () {
                 abilityButtonBehavior(missileAbilityButton, abilityList);
@@ -219,6 +222,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         if (bombardment > 0) {
             let bombardmentAbilityButton = document.createElement("button");
             bombardmentAbilityButton.setAttribute("name", "off");
+            bombardmentAbilityButton.setAttribute("id", "bombardmentAbilityButton");
             bombardmentAbilityButton.innerText = bombardment;
             bombardmentAbilityButton.addEventListener("click", function () {
                 abilityButtonBehavior(bombardmentAbilityButton, abilityList);
@@ -228,6 +232,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         if (scout > 0) {
             let scoutAbilityButton = document.createElement("button");
             scoutAbilityButton.setAttribute("name", "off");
+            scoutAbilityButton.setAttribute("id", "scoutAbilityButton");
             scoutAbilityButton.innerText = scout;
             scoutAbilityButton.addEventListener("click", function () {
                 abilityButtonBehavior(scoutAbilityButton, abilityList);
@@ -305,7 +310,6 @@ document.addEventListener(`DOMContentLoaded`, function () {
                     else if (gameMode == "computer") {
                         computerStuff();
                     }
-
                 });
                 newSquareClone.addEventListener("click", function () {
                     // Gets coordinates of clicked square
@@ -347,7 +351,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         // Sees if ship is on that coordinate (based on whos grid is being attacked)
         let shipList;
         if (gameMode == "player") {
-            if (player = "p1") {
+            if (player == "p1") {
                 shipList = playerTwoShipList;
             }
             else {
@@ -355,80 +359,107 @@ document.addEventListener(`DOMContentLoaded`, function () {
             }
         }
         else if (gameMode == "computer") {
-            if (player = "p1") {
+            if (player == "p1") {
                 shipList = computerShipList;
             }
             else {
                 shipList = playerOneShipList;
             }
         }
-        for (let ship of shipList) {
-            if (ship.rotation == "horizontal" && ship.yCoord == sqrYCoord) {
-                if (sqrXCoord <= ship.xCoord && sqrXCoord > ship.xCoord - ship.size) {
-                    ship.health--;
-                    console.log(`hit ${ship.name} at ${coordinate}`);
+        // for all coordinates that are hit that turn, sees if any ships are on those coordinates, will decrease their health if there are any
+        let abilityList;
+        if (shipList == playerOneShipList) {
+            abilityList = playerTwoAbilityListHTML;
+        }
+        else {
+            abilityList = playerOneAbilityListHTML;
+        }
+        let activeAbility = "none";
+        for (let abilityButton of abilityList.children) {
+            if (abilityButton.name == "on") {
+                switch (abilityButton.id) {
+                    case "airplaneAbilityButton":
+                        activeAbility = "airplane";
+                        break;
+                    case "torpedoAbilityButton":
+                        activeAbility = "torpedo";
+                        break;
+                    case "missileAbilityButton":
+                        activeAbility = "missile";
+                        break;
+                    case "bombardmentAbilityButton":
+                        activeAbility = "bombardment";
+                        break;
                 }
             }
-            else if (ship.rotation == "vertical" && ship.xCoord == sqrXCoord) {
-                if (sqrYCoord <= ship.yCoord && sqrYCoord > ship.yCoord - ship.size) {
-                    ship.health--;
-                    console.log(`hit ${ship.name} at ${coordinate}`);
+        }
+        let arrayOfHitCoordinates = [];
+        switch (activeAbility) {
+            case "airplane":
+                // a 3x3 square
+                arrayOfHitCoordinates.push({ "xCoord": sqrXCoord, "yCoord": sqrYCoord });
+                arrayOfHitCoordinates.push({ "xCoord": sqrXCoord + 1, "yCoord": sqrYCoord });
+                arrayOfHitCoordinates.push({ "xCoord": sqrXCoord - 1, "yCoord": sqrYCoord });
+                arrayOfHitCoordinates.push({ "xCoord": sqrXCoord, "yCoord": sqrYCoord - 1 });
+                arrayOfHitCoordinates.push({ "xCoord": sqrXCoord + 1, "yCoord": sqrYCoord - 1 });
+                arrayOfHitCoordinates.push({ "xCoord": sqrXCoord - 1, "yCoord": sqrYCoord - 1 });
+                arrayOfHitCoordinates.push({ "xCoord": sqrXCoord, "yCoord": sqrYCoord + 1 });
+                arrayOfHitCoordinates.push({ "xCoord": sqrXCoord + 1, "yCoord": sqrYCoord + 1 });
+                arrayOfHitCoordinates.push({ "xCoord": sqrXCoord - 1, "yCoord": sqrYCoord + 1 });
+                attack(shipList, arrayOfHitCoordinates, 1);
+                break;
+            case "torpedo":
+                // a vertical line 5 squares
+                for (i = 0; i < 5; i++) {
+                    arrayOfHitCoordinates.push({ "xCoord": sqrXCoord, "yCoord": sqrYCoord + i });
                 }
+                attack(shipList, arrayOfHitCoordinates, 1);
+                break;
+            case "missile":
+                // one square but more damage
+                arrayOfHitCoordinates.push({ "xCoord": sqrXCoord, "yCoord": sqrYCoord });
+                attack(shipList, arrayOfHitCoordinates, 2);
+                break;
+            case "bombardment":
+                // a horizontal line 4 squares
+                for (i = 0; i < 4; i++) {
+                    arrayOfHitCoordinates.push({ "xCoord": sqrXCoord + i, "yCoord": sqrYCoord });
+                }
+                attack(shipList, arrayOfHitCoordinates, 1);
+                break;
+            case "none":
+                // just the one square
+                arrayOfHitCoordinates.push({ "xCoord": sqrXCoord, "yCoord": sqrYCoord });
+                attack(shipList, arrayOfHitCoordinates, 1);
+                break;
+        }
+        // now turn off the active abilities
+        for (let abilityButton of abilityList.children) {
+            if (abilityButton.name == "on") {
+                abilityButton.name = "off";
             }
         }
     }
     function computerStuff() {
 
     }
-    function attack(shipList, sqrXCoord, sqrYCoord){
-        let abilityList;
-        if(shipList == playerOneShipList){
-            abilityList = playerOneAbilityListHTML;
-        }
-        else{
-            abilityList = playerTwoAbilityListHTML;
-        }
-        let activeAbility;
-        for (let abilityButton of abilityList.children){
-            if(abilityButton.name == "on"){
-                switch (abilityButton){
-                    case airplaneAbilityButton:
-                        activeAbility == "airplane";
-                        break;
-                    case torpedoAbilityButton:
-                        activeAbility == "torpedo";
-                        break;
-                    case missileAbilityButton:
-                        activeAbility == "missile";
-                        break;
-                    case bombardmentAbilityButton:
-                        activeAbility == "bombardment";
-                        break;
-                    default: 
-                        activeAbility == "none";
-                        break;
+    function attack(shipList, hitCoordinates, damage) {
+        console.log(hitCoordinates);
+        for (let coordinate of hitCoordinates) {
+            for (let ship of shipList) {
+                if (ship.rotation == "horizontal" && ship.yCoord == coordinate.yCoord) {
+                    if (coordinate.xCoord <= ship.xCoord && coordinate.xCoord > ship.xCoord - ship.size) {
+                        ship.health -= damage;
+                        console.log(`hit ${ship.name} at ${coordinate.xCoord}, ${coordinate.yCoord}`);
+                    }
+                }
+                else if (ship.rotation == "vertical" && ship.xCoord == coordinate.xCoord) {
+                    if (coordinate.yCoord <= ship.yCoord && coordinate.yCoord > ship.yCoord - ship.size) {
+                        ship.health -= damage;
+                        console.log(`hit ${ship.name} at ${coordinate.xCoord}, ${coordinate.yCoord}`);
+                    }
                 }
             }
-        }
-        let arraOfHitCoordinates;
-        switch(activeAbility){
-            case "airplane":
-
-                break;
-            case "torpedo":
-                
-                break;
-            case "missile":
-                
-                break;
-            case "bombardment":
-                
-                break;
-            case "none":
-                
-                break;
-
-
         }
     }
 
@@ -473,7 +504,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         constructor() {
             this.name = "Battleship";
             this.size = 5;
-            this.health =  5;
+            this.health = 5;
             this.speed = 1;
             this.xCoord = undefined;
             this.yCoord = undefined;
