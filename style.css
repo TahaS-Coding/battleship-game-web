@@ -278,3 +278,6 @@ dd {
     text-align: center;
     transition: width 2s;
 }
+.squareHover{
+    background-color: red;
+}
