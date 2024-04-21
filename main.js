@@ -161,6 +161,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
     let playerTwoAbilityListHTML = document.getElementById('playerTwoAbilityList');
     let playerOneHealth = document.getElementById("playerOneHealth");
     let playerTwoOrComputerHealth = document.getElementById("playerTwoOrComputerHealth");
+    let playerTwoOrComputerHealthHeading = document.getElementById("playerTwoOrComputerHealthHeading");
     //ABILITIES
     function createButtons(shipList, ablitityArray, abilityList) {
         let airplane = 0;
@@ -268,6 +269,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
     // HEALTH BARS
     function createHealthBars() {
         if (gameMode == "player") {
+            playerTwoOrComputerHealthHeading.innerText = "PlayerTwo";
             for (ship of playerOneShipList) {
                 // creates health bar and appends it to respective html list
                 playerOneHealth.appendChild(healthBarHTML(ship));
@@ -278,6 +280,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             }
         }
         else if (gameMode == "computer") {
+            playerTwoOrComputerHealthHeading.innerText = "Computer";
             for (ship of playerOneShipList) {
                 // creates health bar and appends it to respective html list
                 playerOneHealth.appendChild(healthBarHTML(ship));
@@ -291,7 +294,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
     function healthBarHTML(ship) {
         // create the health bar
         let shipHealthElement = document.createElement("section");
-        let shipName = document.createElement("h2");
+        let shipName = document.createElement("h3");
         let healthBar = document.createElement("div");
         let healthBarFill = document.createElement("div");
         let healthNumber = document.createElement("p");
@@ -361,13 +364,13 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 // Creates button elements with unique coordinate id's, hit detection, as children of overlay
                 let sqrID = `x${columns}y${rows}`;
                 let newSquare = document.createElement("button");
-                newSquare.setAttribute("id", sqrID);
+                newSquare.setAttribute("name", sqrID);
                 newSquare.classList.add("squares");
                 let newSquareClone = newSquare.cloneNode(true);
                 // when square clicked
                 newSquare.addEventListener("click", function () {
                     // Gets coordinates of clicked square
-                    let clickedSqrID = this.getAttribute("id");
+                    let clickedSqrID = this.getAttribute("name");
                     hitCoordinate(clickedSqrID);
                     updateHealth();
                     //change player turn
@@ -383,7 +386,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 });
                 newSquareClone.addEventListener("click", function () {
                     // Gets coordinates of clicked square
-                    let clickedSqrID = this.getAttribute("id");
+                    let clickedSqrID = this.getAttribute("name");
                     hitCoordinate(clickedSqrID);
                     updateHealth();
                     //change player turn
@@ -394,7 +397,25 @@ document.addEventListener(`DOMContentLoaded`, function () {
                         player = "p1";
                     }
                 });
+                // when hovering over a square
+                newSquare.addEventListener("mouseover", function(){
+                    let clickedSqrID = this.getAttribute("name");
+                    squareMouseOver(playerOneGrid, clickedSqrID);
+                });
+                newSquareClone.addEventListener("mouseover", function(){
+                    let clickedSqrID = this.getAttribute("name");
+                    squareMouseOver(playerTwoGrid, clickedSqrID);
+                });
+                newSquare.addEventListener("mouseout", function(){
+                    let clickedSqrID = this.getAttribute("name");
+                    squareMouseOut(playerOneGrid);
+                });
+                newSquareClone.addEventListener("mouseout", function(){
+                    let clickedSqrID = this.getAttribute("name");
+                    squareMouseOut(playerTwoGrid);
+                });
 
+                // append square to html grid
                 if (gameMode == "player") {
                     playerOneGrid.appendChild(newSquare);
                     playerTwoGrid.appendChild(newSquareClone);
@@ -403,6 +424,114 @@ document.addEventListener(`DOMContentLoaded`, function () {
                     playerOneGrid.appendChild(newSquare);
                 }
             }
+        }
+    }
+    function squareMouseOver(overlayGrid, coordinate){
+        // find active ability
+        let abilityList;
+        if (overlayGrid == playerOneGrid){
+            abilityList = playerOneAbilityListHTML;
+        }
+        else{
+            abilityList = playerTwoAbilityListHTML;
+        }
+        let activeAbility = "none";
+        for (let abilityButton of abilityList.children) {
+            if (abilityButton.name == "on") {
+                switch (abilityButton.id) {
+                    case "airplaneAbilityButton":
+                        activeAbility = "airplane";
+                        break;
+                    case "torpedoAbilityButton":
+                        activeAbility = "torpedo";
+                        break;
+                    case "missileAbilityButton":
+                        activeAbility = "missile";
+                        break;
+                    case "bombardmentAbilityButton":
+                        activeAbility = "bombardment";
+                        break;
+                }
+            }
+        }
+        // get coordinate of square
+        let splitID = coordinate.match(/\d+/g);
+        let sqrXCoord = null;
+        let sqrYCoord = null;
+        for (let char of splitID) {
+            let num = Number(char);
+            if (sqrXCoord == null) {
+                sqrXCoord = num;
+            }
+            else if (sqrXCoord != null) {
+                sqrYCoord = num;
+            }
+        }
+        // which squares to have hover effect
+        switch (activeAbility) {
+            case "airplane":
+                // a 3x3 square
+                if (overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord}"]`) != null){
+                    overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord}"]`).classList.add("squareHover");
+                }
+                if (overlayGrid.querySelector(`button[name="x${sqrXCoord + 1}y${sqrYCoord}"]`) != null){
+                    overlayGrid.querySelector(`button[name="x${sqrXCoord + 1}y${sqrYCoord}"]`).classList.add("squareHover");
+                }
+                if (overlayGrid.querySelector(`button[name="x${sqrXCoord - 1}y${sqrYCoord}"]`) != null){
+                    overlayGrid.querySelector(`button[name="x${sqrXCoord - 1}y${sqrYCoord}"]`).classList.add("squareHover");
+                }
+                if (overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord - 1}"]`) != null){
+                    overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord - 1}"]`).classList.add("squareHover");
+                }
+                if (overlayGrid.querySelector(`button[name="x${sqrXCoord + 1}y${sqrYCoord - 1}"]`) != null){
+                    overlayGrid.querySelector(`button[name="x${sqrXCoord + 1}y${sqrYCoord - 1}"]`).classList.add("squareHover");
+                }
+                if (overlayGrid.querySelector(`button[name="x${sqrXCoord - 1}y${sqrYCoord - 1}"]`) != null){
+                    overlayGrid.querySelector(`button[name="x${sqrXCoord - 1}y${sqrYCoord - 1}"]`).classList.add("squareHover");
+                }
+                if (overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord + 1}"]`) != null){
+                    overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord + 1}"]`).classList.add("squareHover");
+                }
+                if (overlayGrid.querySelector(`button[name="x${sqrXCoord + 1}y${sqrYCoord + 1}"]`) != null){
+                    overlayGrid.querySelector(`button[name="x${sqrXCoord + 1}y${sqrYCoord + 1}"]`).classList.add("squareHover");
+                }
+                if (overlayGrid.querySelector(`button[name="x${sqrXCoord - 1}y${sqrYCoord + 1}"]`) != null){
+                    overlayGrid.querySelector(`button[name="x${sqrXCoord - 1}y${sqrYCoord + 1}"]`).classList.add("squareHover");
+                }
+                break;
+            case "torpedo":
+                // a vertical line 5 squares
+                for (i = 0; i < 5; i++) {
+                    if (overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord + i}"]`) != null){
+                        overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord + i}"]`).classList.add("squareHover");
+                    }
+                }
+                break;
+            case "missile":
+                // one square 
+                if (overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord}"]`) != null){
+                    overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord}"]`).classList.add("squareHover");
+                }
+                break;
+            case "bombardment":
+                // a horizontal line 4 squares
+                for (i = 0; i < 4; i++) {
+                    if (overlayGrid.querySelector(`button[name="x${sqrXCoord + i}y${sqrYCoord}"]`) != null){
+                        overlayGrid.querySelector(`button[name="x${sqrXCoord + i}y${sqrYCoord}"]`).classList.add("squareHover");
+                    }
+                }
+                break;
+            case "none":
+                // one square
+                if (overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord}"]`) != null){
+                    overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord}"]`).classList.add("squareHover");
+                }
+                break;
+        }
+    }
+    function squareMouseOut(overlayGrid){
+        for (square of overlayGrid.children){
+            square.classList.remove("squareHover");
         }
     }
     // Check if coordinate hits any ship
