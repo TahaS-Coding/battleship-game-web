@@ -5,21 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Battleship Unknown</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style-copy.css">
 </head>
 
 <body>
     <header>
-        <h1>Battleship Unknown</h1>
+        <h1>Copy of Battleship Unknown</h1>
     </header>
-    <section class="pageWrapper">
+    <main>
         <canvas>
 
         </canvas>
         <script src="main.js"></script>
 
 
-        <!--  -->
         <section class="" id="gameModeSelect">
             <div class="instruction">
                 <button class="instructionsButton">?</button>
@@ -117,21 +116,19 @@
         </section>
 
         <section class="hidden" id="gameScreen">
-            <section class="instruction">
-                <button class="instructionsButton">?</button>
-                <section class="instructionsOverlay hidden">
-                    <button class="closeInstructionsOverlay">X</button>
-                    <p>askdahkfdhaklfdhgakslfdgalksjfdbgalksgfd</p>
-                </section>
+            <button class="instructionsButton">?</button>
+            <section class="instructionsOverlay hidden">
+                <button class="closeInstructionsOverlay">X</button>
+                <p>askdahkfdhaklfdhgakslfdgalksjfdbgalksgfd</p>
             </section>
-
+    
             <section class="game-board-overlay" id="gameBoardOverlayPlayerOne">
                 <h1>Player One Turn</h1>
                 <div class="overlay-two-column">
                     <div class="column-left">
                         <div class="gridStatusLegend">
                         </div>
-                        <div id="playerOneAbility:List">
+                        <div id="playerOneAbilityList">
                         </div>
                     </div>
                     <div class="column-right" id="playerOneGrid">
@@ -144,15 +141,21 @@
                     <div class="column-left">
                         <div class="gridStatusLegend">
                         </div>
-                        <div id="playerTwoAbility:List">
+                        <div id="playerTwoAbilityList">
                         </div>
                     </div>
                     <div class="column-right" id="playerTwoGrid">
                     </div>
                 </div>
             </section>
+            <section id="playerOneHealth">
+                
+            </section>
+            <section id="playerTwoOrComputerHealth">
+                
+            </section>
         </section>
-    </section>
+    </main>
 </body>
 
 </html>
