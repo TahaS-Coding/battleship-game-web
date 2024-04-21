@@ -12,107 +12,118 @@
     <header>
         <h1>Battleship Unknown</h1>
     </header>
-    <canvas>
+    <main>
+        <canvas>
 
-    </canvas>
-    <script src="main.js"></script>
+        </canvas>
+        <script src="main.js"></script>
 
 
-
-    <section class="" id="gameModeSelect">
-        <button class="instructionsButton">?</button>
-        <section class="instructionsOverlay hidden">
-            <button class="closeInstructionsOverlay">X</button>
-            <p>askdahkfdhaklfdhgakslfdgalksjfdbgalksgfd</p>
+        <section class="" id="gameModeSelect">
+            <div class="instruction">
+                <button class="instructionsButton">?</button>
+                <section class="instructionsOverlay hidden">
+                    <button class="closeInstructionsOverlay">X</button>
+                    <p>askdahkfdhaklfdhgakslfdgalksjfdbgalksgfd askdahkfdhaklfdhgakslfdgalksjfdbgalksgfd
+                        askdahkfdhaklfdhgakslfdgalksjfdbgalksgfd askdahkfdhaklfdh gakslfdga lksjfdb galksgfd</p>
+                </section>
+            </div>
+            <div class="gameSelection">
+                <button id="playerButton">Player</button>
+                <button id="computerButton">Computer</button>
+            </div>
         </section>
 
-        <button id="playerButton">Player</button>
-        <button id="computerButton">Computer</button>
-    </section>
 
-    <section class="hidden" id="shipSelection">
-        <button class="instructionsButton">?</button>
-        <section class="instructionsOverlay hidden">
-            <button class="closeInstructionsOverlay">X</button>
-            <p>askdahkfdhaklfdhgakslfdgalksjfdbgalksgfd</p>
-        </section>
-        <section>
-            <section>
-                <h3>Ships</h3>
-                <section>
-                    <h4>Aircraft Carrier</h4>
-                    <dl>
-                        <dt>Size</dt>
-                        <dd>IDK</dd>
-                        <dt>Health</dt>
-                        <dd>IDK</dd>
-                        <dt>Ability</dt>
-                        <dd>IDK</dd>
-                    </dl>
-                    <button id="addCarrier">Add AircraftCarrier</button>
-                </section>
-                <section>
-                    <h4>Destroyer</h4>
-                    <dl>
-                        <dt>Size</dt>
-                        <dd>IDK</dd>
-                        <dt>Health</dt>
-                        <dd>IDK</dd>
-                        <dt>Ability</dt>
-                        <dd>IDK</dd>
-                    </dl>
-                    <button id="addDestroyer">Add Destroyer</button>
-                </section>
-                <section>
-                    <h4>Cruiser</h4>
-                    <dl>
-                        <dt>Size</dt>
-                        <dd>IDK</dd>
-                        <dt>Health</dt>
-                        <dd>IDK</dd>
-                        <dt>Ability</dt>
-                        <dd>IDK</dd>
-                    </dl>
-                    <button id="addCruiser">Add Cruiser</button>
-                </section>
-                <section>
-                    <h4>Battleship</h4>
-                    <dl>
-                        <dt>Size</dt>
-                        <dd>IDK</dd>
-                        <dt>Health</dt>
-                        <dd>IDK</dd>
-                        <dt>Ability</dt>
-                        <dd>IDK</dd>
-                    </dl>
-                    <button id="addBattleship">Add Battleship</button>
-                </section>
-                <section>
-                    <h4>Frigate</h4>
-                    <dl>
-                        <dt>Size</dt>
-                        <dd>IDK</dd>
-                        <dt>Health</dt>
-                        <dd>IDK</dd>
-                        <dt>Ability</dt>
-                        <dd>IDK</dd>
-                    </dl>
-                    <button id="addFrigate">Add Frigate</button>
+        <section class="hidden" id="shipSelection">
+            <section class="instruction">
+                <button class="instructionsButton">?</button>
+                <section class="instructionsOverlay hidden">
+                    <button class="closeInstructionsOverlay">X</button>
+                    <p>askdahkfdhaklfdhgakslfdgalksjfdbgalksgfd</p>
                 </section>
             </section>
-            <section id="chosenShips">
-                <h3>Ship List</h3>
+            <section class="shipSelectionSection">
+                <section class="shipOptions">
+                    <h3>Ships</h3>
+                    <section class="shipButton">
+                        <h4>Aircraft Carrier</h4>
+                        <dl>
+                            <dt>Size:</dt>
+                            <dd>4</dd>
+                            <dt>Health:</dt>
+                            <dd>4</dd>
+                            <dt>Ability:</dt>
+                            <dd>Precise Airstrike</dd>
+                        </dl>
+                        <button id="addCarrier">Add AircraftCarrier</button>
+                    </section>
+                    <section class="shipButton">
+                        <h4>Destroyer</h4>
+                        <dl>
+                            <dt>Size:</dt>
+                            <dd>4</dd>
+                            <dt>Health:</dt>
+                            <dd>4</dd>
+                            <dt>Ability:</dt>
+                            <dd>Torpedo</dd>
+                        </dl>
+                        <button id="addDestroyer">Add Destroyer</button>
+                    </section>
+                    <section class="shipButton">
+                        <h4>Cruiser</h4>
+                        <dl>
+                            <dt>Size:</dt>
+                            <dd>4</dd>
+                            <dt>Health:</dt>
+                            <dd>4</dd>
+                            <dt>Ability:</dt>
+                            <dd>Missile</dd>
+                        </dl>
+                        <button id="addCruiser">Add Cruiser</button>
+                    </section>
+                    <section class="shipButton">
+                        <h4>Battleship</h4>
+                        <dl>
+                            <dt>Size:</dt>
+                            <dd>5</dd>
+                            <dt>Health:</dt>
+                            <dd>5</dd>
+                            <dt>Ability:</dt>
+                            <dd>Bombardment</dd>
+                        </dl>
+                        <button id="addBattleship">Add Battleship</button>
+                    </section>
+                    <section class="shipButton">
+                        <h4>Frigate</h4>
+                        <dl>
+                            <dt>Size:</dt>
+                            <dd>3</dd>
+                            <dt>Health:</dt>
+                            <dd>3</dd>
+                            <dt>Ability:</dt>
+                            <dd>Scout</dd>
+                        </dl>
+                        <button id="addFrigate">Add Frigate</button>
+                    </section>
+                </section>
+                <section id="chosenShips">
+                    <h3>Ship List</h3>
 
+                </section>
             </section>
+            <button id="shipSelectionContinueButton">Continue</button>
         </section>
-        <button id="shipSelectionContinueButton">Continue</button>
-    </section>
 
-    <section class="hidden" id="gameScreen">
-        <button class="instructionsButton">?</button>
-        <section class="instructionsOverlay hidden">
-            <button class="closeInstructionsOverlay">X</button>
-            <p>askdahkfdhaklfdhgakslfdgalksjfdbgalksgfd</p>
+        <section class="hidden" id="gameScreen">
+            <div class="instruction">
+                <button class="instructionsButton">?</button>
+                <section class="instructionsOverlay hidden">
+                    <button class="closeInstructionsOverlay">X</button>
+                    <p>askdahkfdhaklfdhgakslfdgalksjfdbgalksgfd askdahkfdhaklfdhgakslfdgalksjfdbgalksgfd
+                        askdahkfdhaklfdhgakslfdgalksjfdbgalksgfd askdahkfdhaklfdh gakslfdga lksjfdb galksgfd</p>
+                </section>
+            </div>
         </section>
 
         <section class="game-board-overlay" id="gameBoardOverlayPlayerOne">
@@ -142,13 +153,13 @@
             </div>
         </section>
         <section id="playerOneHealth">
-            
+
         </section>
         <section id="playerTwoOrComputerHealth">
-            
-        </section>
-    </section>
 
+        </section>
+        </section>
+    </main>
 </body>
 
 </html>
