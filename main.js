@@ -121,6 +121,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             gameplayScreen.classList.remove("hidden");
             createOverlays();
             createButtons(playerOneShipList, playerOneAbilityList, playerOneAbilityListHTML);
+            createHealthBars();
             randomCoordinatesAllShips(playerOneShipList);
             randomCoordinatesAllShips(computerShipList);
         }
@@ -141,6 +142,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             createOverlays();
             createButtons(playerOneShipList, playerOneAbilityList, playerOneAbilityListHTML);
             createButtons(playerTwoShipList, playerTwoAbilityList, playerTwoAbilityListHTML);
+            createHealthBars();
             randomCoordinatesAllShips(playerOneShipList);
             randomCoordinatesAllShips(playerTwoShipList);
         }
@@ -157,6 +159,8 @@ document.addEventListener(`DOMContentLoaded`, function () {
     let playerTwoGrid = document.getElementById("playerTwoGrid");
     let playerOneAbilityListHTML = document.getElementById('playerOneAbilityList');
     let playerTwoAbilityListHTML = document.getElementById('playerTwoAbilityList');
+    let playerOneHealth = document.getElementById("playerOneHealth");
+    let playerTwoOrComputerHealth = document.getElementById("playerTwoOrComputerHealth");
     //ABILITIES
     function createButtons(shipList, ablitityArray, abilityList) {
         let airplane = 0;
@@ -261,7 +265,72 @@ document.addEventListener(`DOMContentLoaded`, function () {
             }
         }
     }
+    // HEALTH BARS
+    function createHealthBars() {
+        if (gameMode == "player") {
+            for (ship of playerOneShipList) {
+                // creates health bar and appends it to respective html list
+                playerOneHealth.appendChild(healthBarHTML(ship));
+            }
+            for (ship of playerTwoShipList) {
+                // creates health bar and appends it to respective html list
+                playerTwoOrComputerHealth.appendChild(healthBarHTML(ship));
+            }
+        }
+        else if (gameMode == "computer") {
+            for (ship of playerOneShipList) {
+                // creates health bar and appends it to respective html list
+                playerOneHealth.appendChild(healthBarHTML(ship));
+            }
+            for (ship of computerShipList) {
+                // creates health bar and appends it to respective html list
+                playerTwoOrComputerHealth.appendChild(healthBarHTML(ship));
+            }
+        }
+    }
+    function healthBarHTML(ship) {
+        // create the health bar
+        let shipHealthElement = document.createElement("section");
+        let shipName = document.createElement("h2");
+        let healthBar = document.createElement("div");
+        let healthBarFill = document.createElement("div");
+        let healthNumber = document.createElement("p");
 
+        shipName.innerText = ship.name;
+        healthBar.classList.add("health-bar");
+        healthBarFill.classList.add("health-bar-fill");
+        healthNumber.innerText = ship.health;
+        healthNumber.classList.add("health-number");
+
+        healthBarFill.appendChild(healthNumber);
+        healthBar.appendChild(healthBarFill);
+        shipHealthElement.appendChild(shipName);
+        shipHealthElement.appendChild(healthBar);
+
+        return shipHealthElement;
+    }
+    function updateHealth() {
+        if (gameMode == "player") {
+            updateHealthHTML(playerOneShipList, playerOneHealth);
+            updateHealthHTML(playerTwoShipList, playerTwoOrComputerHealth);
+        }
+        else if (gameMode == "computer") {
+            updateHealthHTML(playerOneShipList, playerOneHealth);
+            updateHealthHTML(computerShipList, playerTwoOrComputerHealth);
+        }
+    }
+    function updateHealthHTML(shipList, healthList) {
+        // for each ship list, finds the corresponding health element for each ship because they share the same index, then finds the necassary elements within it
+        for (i = 0; i < shipList.length; i++) {
+            let shipHealthElement = healthList.children[i];
+            let healthBarFillElement = shipHealthElement.querySelector('.health-bar-fill');
+            let healthNumberElement = shipHealthElement.querySelector('.health-number');
+
+            let ship = shipList[i];
+            healthBarFillElement.style.width = `${(ship.currHealth / ship.health) * 100}%`;
+            healthNumberElement.innerText = ship.currHealth;
+        }
+    }
 
     // instructions overlay
     let instructionsButtons = document.querySelectorAll('.instructionsButton');
@@ -300,6 +369,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
                     // Gets coordinates of clicked square
                     let clickedSqrID = this.getAttribute("id");
                     hitCoordinate(clickedSqrID);
+                    updateHealth();
                     //change player turn
                     if (gameMode == "player") {
                         playerOneOverlayBoard.classList.add("hidden");
@@ -315,6 +385,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
                     // Gets coordinates of clicked square
                     let clickedSqrID = this.getAttribute("id");
                     hitCoordinate(clickedSqrID);
+                    updateHealth();
                     //change player turn
                     if (gameMode == "player") {
                         playerTwoOverlayBoard.classList.add("hidden");
@@ -449,13 +520,13 @@ document.addEventListener(`DOMContentLoaded`, function () {
             for (let ship of shipList) {
                 if (ship.rotation == "horizontal" && ship.yCoord == coordinate.yCoord) {
                     if (coordinate.xCoord <= ship.xCoord && coordinate.xCoord > ship.xCoord - ship.size) {
-                        ship.health -= damage;
+                        ship.currHealth -= damage;
                         console.log(`hit ${ship.name} at ${coordinate.xCoord}, ${coordinate.yCoord}`);
                     }
                 }
                 else if (ship.rotation == "vertical" && ship.xCoord == coordinate.xCoord) {
                     if (coordinate.yCoord <= ship.yCoord && coordinate.yCoord > ship.yCoord - ship.size) {
-                        ship.health -= damage;
+                        ship.currHealth -= damage;
                         console.log(`hit ${ship.name} at ${coordinate.xCoord}, ${coordinate.yCoord}`);
                     }
                 }
@@ -463,12 +534,12 @@ document.addEventListener(`DOMContentLoaded`, function () {
         }
     }
 
-
     class AircraftCarrier {
         constructor() {
             this.name = "AircraftCarrier";
             this.size = 5;
             this.health = 5;
+            this.currHealth = 5;
             this.speed = 1;
             this.xCoord = undefined;
             this.yCoord = undefined;
@@ -481,6 +552,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             this.name = "Destroyer";
             this.size = 4;
             this.health = 4;
+            this.currHealth = 4;
             this.speed = 2;
             this.xCoord = undefined;
             this.yCoord = undefined;
@@ -493,6 +565,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             this.name = "Cruiser";
             this.size = 4;
             this.health = 4;
+            this.currHealth = 4;
             this.speed = 2;
             this.xCoord = undefined;
             this.yCoord = undefined;
@@ -505,6 +578,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             this.name = "Battleship";
             this.size = 5;
             this.health = 5;
+            this.currHealth = 5;
             this.speed = 1;
             this.xCoord = undefined;
             this.yCoord = undefined;
@@ -517,6 +591,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             this.name = "Frigate";
             this.size = 3;
             this.health = 3;
+            this.currHealth = 3;
             this.speed = 3;
             this.xCoord = undefined;
             this.yCoord = undefined;
