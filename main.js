@@ -183,7 +183,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
                     torpedo += 1;
                     break;
                 case "Missile":
-                    missile += 1;a
+                    missile += 1;
                     break;
                 case "Bombardment":
                     bombardment += 1;
