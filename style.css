@@ -45,8 +45,6 @@ canvas {
     position: absolute;
 }
 
-
-
 .instruction {
     display: flex;
     flex-flow: wrap row-reverse;
@@ -125,9 +123,17 @@ canvas {
     border-radius: .2vw;
 }
 
-#shipSelectionContinueButton {
+#chosenShips #shipSelectionContinueButton {
+    background-color: rgb(232, 232, 232);
     border: black solid .12vw;
-    border-radius: .5vw;
+    border-radius: .2vw;
+    font-size: .8rem;
+    width: 8rem;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-end;
 }
 
 .shipOptions {
@@ -217,8 +223,6 @@ dd {
     align-items: center;
     justify-content: center;
     position: relative;
-    top: -110vh;
-    left: 59vw;
     display: flex;
     flex-flow: column wrap;
 }
@@ -330,4 +334,46 @@ dd {
 
 .scouting {
     animation: blink 1s infinite;
+}
+
+.airplaneAbilityButton{
+    background-image: url(images/airplane.png);
+    background-size: cover;
+    height: 50px;
+    width: 50px;
+    border-radius: 50px;
+}
+.torpedoAbilityButton{
+    background-image: url(images/torpedo.png);
+    background-size: cover;
+    height: 50px;
+    width: 50px;
+    border-radius: 50px;
+}
+.missileAbilityButton{
+    background-image: url(images/missile.png);
+    background-size: cover;
+    height: 50px;
+    width: 50px;
+    border-radius: 50px;
+}
+.bombardmentAbilityButton{
+    background-image: url(images/bombardment.png);
+    background-size: cover;
+    height: 50px;
+    width: 50px;
+    border-radius: 50px;
+}
+.scoutAbilityButton{
+    background-image: url(images/scout.png);
+    background-size: cover;
+    height: 50px;
+    width: 50px;
+    border-radius: 50px;
+}
+
+.airplaneAbilityButton, .torpedoAbilityButton, .missileAbilityButton, .bombardmentAbilityButton, .scoutAbilityButton{
+    color: white;
+    font-size: 25px;
+    font-weight: bold;
 }

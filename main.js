@@ -197,7 +197,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         if (airplane > 0) {
             let airplaneAbilityButton = document.createElement("button");
             airplaneAbilityButton.setAttribute("name", "off");
-            airplaneAbilityButton.setAttribute("id", "airplaneAbilityButton");
+            airplaneAbilityButton.setAttribute("class", "airplaneAbilityButton");
             airplaneAbilityButton.innerText = airplane;
             airplaneAbilityButton.addEventListener("click", function () {
                 abilityButtonBehavior(airplaneAbilityButton, abilityList);
@@ -207,7 +207,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         if (torpedo > 0) {
             let torpedoAbilityButton = document.createElement("button");
             torpedoAbilityButton.setAttribute("name", "off");
-            torpedoAbilityButton.setAttribute("id", "torpedoAbilityButton");
+            torpedoAbilityButton.setAttribute("class", "torpedoAbilityButton");
             torpedoAbilityButton.innerText = torpedo;
             torpedoAbilityButton.addEventListener("click", function () {
                 abilityButtonBehavior(torpedoAbilityButton, abilityList);
@@ -217,7 +217,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         if (missile > 0) {
             let missileAbilityButton = document.createElement("button");
             missileAbilityButton.setAttribute("name", "off");
-            missileAbilityButton.setAttribute("id", "missileAbilityButton");
+            missileAbilityButton.setAttribute("class", "missileAbilityButton");
             missileAbilityButton.innerText = missile;
             missileAbilityButton.addEventListener("click", function () {
                 abilityButtonBehavior(missileAbilityButton, abilityList);
@@ -227,7 +227,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         if (bombardment > 0) {
             let bombardmentAbilityButton = document.createElement("button");
             bombardmentAbilityButton.setAttribute("name", "off");
-            bombardmentAbilityButton.setAttribute("id", "bombardmentAbilityButton");
+            bombardmentAbilityButton.setAttribute("class", "bombardmentAbilityButton");
             bombardmentAbilityButton.innerText = bombardment;
             bombardmentAbilityButton.addEventListener("click", function () {
                 abilityButtonBehavior(bombardmentAbilityButton, abilityList);
@@ -237,7 +237,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         if (scout > 0) {
             let scoutAbilityButton = document.createElement("button");
             scoutAbilityButton.setAttribute("name", "off");
-            scoutAbilityButton.setAttribute("id", "scoutAbilityButton");
+            scoutAbilityButton.setAttribute("class", "scoutAbilityButton");
             scoutAbilityButton.innerText = scout;
             scoutAbilityButton.addEventListener("click", function () {
                 // shows a random enemy ship coordinate on the overlay
@@ -482,7 +482,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         let activeAbility = "none";
         for (let abilityButton of abilityList.children) {
             if (abilityButton.name == "on") {
-                switch (abilityButton.id) {
+                switch (abilityButton.getAttribute("class")) {
                     case "airplaneAbilityButton":
                         activeAbility = "airplane";
                         break;
@@ -600,7 +600,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         let activeAbility = "none";
         for (let abilityButton of abilityList.children) {
             if (abilityButton.name == "on") {
-                switch (abilityButton.id) {
+                switch (abilityButton.getAttribute("class")) {
                     case "airplaneAbilityButton":
                         activeAbility = "airplane";
                         break;
