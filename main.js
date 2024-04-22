@@ -458,7 +458,23 @@ document.addEventListener(`DOMContentLoaded`, function () {
                     let clickedSqrID = this.getAttribute("name");
                     squareMouseOut(playerTwoGrid);
                 });
-
+                // mobile hover stuff
+                newSquare.addEventListener("touchstart", function () {
+                    let clickedSqrID = this.getAttribute("name");
+                    squareMouseOver(playerOneGrid, clickedSqrID);
+                });
+                newSquareClone.addEventListener("touchstart", function () {
+                    let clickedSqrID = this.getAttribute("name");
+                    squareMouseOver(playerTwoGrid, clickedSqrID);
+                });
+                newSquare.addEventListener("touchend", function () {
+                    let clickedSqrID = this.getAttribute("name");
+                    squareMouseOut(playerOneGrid);
+                });
+                newSquareClone.addEventListener("touchend", function () {
+                    let clickedSqrID = this.getAttribute("name");
+                    squareMouseOut(playerTwoGrid);
+                });
                 // append square to html grid
                 if (gameMode == "player") {
                     playerOneGrid.appendChild(newSquare);
