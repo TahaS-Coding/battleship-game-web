@@ -281,3 +281,10 @@ dd {
 .squareHover{
     background-color: red;
 }
+@keyframes blink {
+    0%, 100% { background-color: #f0f0f0; }
+    50% { background-color: red; }
+}
+.scouting{
+    animation: blink 1s infinite;
+}

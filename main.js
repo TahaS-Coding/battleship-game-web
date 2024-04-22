@@ -240,7 +240,51 @@ document.addEventListener(`DOMContentLoaded`, function () {
             scoutAbilityButton.setAttribute("id", "scoutAbilityButton");
             scoutAbilityButton.innerText = scout;
             scoutAbilityButton.addEventListener("click", function () {
-                abilityButtonBehavior(scoutAbilityButton, abilityList);
+                // shows a random enemy ship coordinate on the overlay
+                let abilityUsesLeft = Number(scoutAbilityButton.innerText);
+                let anyAbilityActive = false;
+                //are any abilities already active excluding the clicked button
+                for (let abilityButton of abilityList.children) {
+                    if (abilityButton.name == "on" && abilityButton != scoutAbilityButton) {
+                        anyAbilityActive = true;
+                    }
+                }
+                // if not button can change states
+                if (anyAbilityActive == false) {
+                    if (scoutAbilityButton.name == "off" && abilityUsesLeft > 0) {
+                        scoutAbilityButton.name = "on";
+                        scoutAbilityButton.innerText = abilityUsesLeft - 1;
+
+                        let enemyShipList;
+                        if (abilityList == playerOneAbilityListHTML){
+                            enemyShipList = playerTwoShipList;
+                        }
+                        else{
+                            enemyShipList = playerOneShipList;
+                        }
+                        // all enemy ships still standing
+                        let availableShips = [];
+                        for (ship of enemyShipList){
+                            if (ship.currHealth > 0){
+                                availableShips.push(ship);
+                            }
+                        }
+                        // get coordinates for each ship
+                        let enemyShipCoordinates = [];
+                        for (ship of availableShips){
+                            enemyShipCoordinates.push({"xCoord": ship.xCoord, "yCoord": ship.yCoord});
+                        }
+                        // choose one of these coordinates randomly 
+                        let chosenCoord = enemyShipCoordinates[Math.floor(Math.random() * enemyShipCoordinates.length)];
+                        // update that square on the overlay to start blinking
+                        if (enemyShipList == playerTwoShipList){
+                            playerOneGrid.querySelector(`button[name="x${chosenCoord.xCoord}y${chosenCoord.yCoord}"]`).classList.add("scouting");
+                        }
+                        else if(enemyShipList == playerOneShipList){
+                            playerTwoGrid.querySelector(`button[name="x${chosenCoord.xCoord}y${chosenCoord.yCoord}"]`).classList.add("scouting");
+                        }
+                    }
+                }
             });
             abilityList.appendChild(scoutAbilityButton);
         }
@@ -398,19 +442,19 @@ document.addEventListener(`DOMContentLoaded`, function () {
                     }
                 });
                 // when hovering over a square
-                newSquare.addEventListener("mouseover", function(){
+                newSquare.addEventListener("mouseover", function () {
                     let clickedSqrID = this.getAttribute("name");
                     squareMouseOver(playerOneGrid, clickedSqrID);
                 });
-                newSquareClone.addEventListener("mouseover", function(){
+                newSquareClone.addEventListener("mouseover", function () {
                     let clickedSqrID = this.getAttribute("name");
                     squareMouseOver(playerTwoGrid, clickedSqrID);
                 });
-                newSquare.addEventListener("mouseout", function(){
+                newSquare.addEventListener("mouseout", function () {
                     let clickedSqrID = this.getAttribute("name");
                     squareMouseOut(playerOneGrid);
                 });
-                newSquareClone.addEventListener("mouseout", function(){
+                newSquareClone.addEventListener("mouseout", function () {
                     let clickedSqrID = this.getAttribute("name");
                     squareMouseOut(playerTwoGrid);
                 });
@@ -426,13 +470,13 @@ document.addEventListener(`DOMContentLoaded`, function () {
             }
         }
     }
-    function squareMouseOver(overlayGrid, coordinate){
+    function squareMouseOver(overlayGrid, coordinate) {
         // find active ability
         let abilityList;
-        if (overlayGrid == playerOneGrid){
+        if (overlayGrid == playerOneGrid) {
             abilityList = playerOneAbilityListHTML;
         }
-        else{
+        else {
             abilityList = playerTwoAbilityListHTML;
         }
         let activeAbility = "none";
@@ -471,66 +515,45 @@ document.addEventListener(`DOMContentLoaded`, function () {
         switch (activeAbility) {
             case "airplane":
                 // a 3x3 square
-                if (overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord}"]`) != null){
-                    overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord}"]`).classList.add("squareHover");
-                }
-                if (overlayGrid.querySelector(`button[name="x${sqrXCoord + 1}y${sqrYCoord}"]`) != null){
-                    overlayGrid.querySelector(`button[name="x${sqrXCoord + 1}y${sqrYCoord}"]`).classList.add("squareHover");
-                }
-                if (overlayGrid.querySelector(`button[name="x${sqrXCoord - 1}y${sqrYCoord}"]`) != null){
-                    overlayGrid.querySelector(`button[name="x${sqrXCoord - 1}y${sqrYCoord}"]`).classList.add("squareHover");
-                }
-                if (overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord - 1}"]`) != null){
-                    overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord - 1}"]`).classList.add("squareHover");
-                }
-                if (overlayGrid.querySelector(`button[name="x${sqrXCoord + 1}y${sqrYCoord - 1}"]`) != null){
-                    overlayGrid.querySelector(`button[name="x${sqrXCoord + 1}y${sqrYCoord - 1}"]`).classList.add("squareHover");
-                }
-                if (overlayGrid.querySelector(`button[name="x${sqrXCoord - 1}y${sqrYCoord - 1}"]`) != null){
-                    overlayGrid.querySelector(`button[name="x${sqrXCoord - 1}y${sqrYCoord - 1}"]`).classList.add("squareHover");
-                }
-                if (overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord + 1}"]`) != null){
-                    overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord + 1}"]`).classList.add("squareHover");
-                }
-                if (overlayGrid.querySelector(`button[name="x${sqrXCoord + 1}y${sqrYCoord + 1}"]`) != null){
-                    overlayGrid.querySelector(`button[name="x${sqrXCoord + 1}y${sqrYCoord + 1}"]`).classList.add("squareHover");
-                }
-                if (overlayGrid.querySelector(`button[name="x${sqrXCoord - 1}y${sqrYCoord + 1}"]`) != null){
-                    overlayGrid.querySelector(`button[name="x${sqrXCoord - 1}y${sqrYCoord + 1}"]`).classList.add("squareHover");
-                }
+                squareHoverAddClass(overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord}"]`));
+                squareHoverAddClass(overlayGrid.querySelector(`button[name="x${sqrXCoord + 1}y${sqrYCoord}"]`));
+                squareHoverAddClass(overlayGrid.querySelector(`button[name="x${sqrXCoord - 1}y${sqrYCoord}"]`));
+                squareHoverAddClass(overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord - 1}"]`));
+                squareHoverAddClass(overlayGrid.querySelector(`button[name="x${sqrXCoord + 1}y${sqrYCoord - 1}"]`));
+                squareHoverAddClass(overlayGrid.querySelector(`button[name="x${sqrXCoord - 1}y${sqrYCoord - 1}"]`));
+                squareHoverAddClass(overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord + 1}"]`));
+                squareHoverAddClass(overlayGrid.querySelector(`button[name="x${sqrXCoord + 1}y${sqrYCoord + 1}"]`));
+                squareHoverAddClass(overlayGrid.querySelector(`button[name="x${sqrXCoord - 1}y${sqrYCoord + 1}"]`));
                 break;
             case "torpedo":
                 // a vertical line 5 squares
                 for (i = 0; i < 5; i++) {
-                    if (overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord + i}"]`) != null){
-                        overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord + i}"]`).classList.add("squareHover");
-                    }
+                    squareHoverAddClass(overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord + i}"]`));
                 }
                 break;
             case "missile":
                 // one square 
-                if (overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord}"]`) != null){
-                    overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord}"]`).classList.add("squareHover");
-                }
+                squareHoverAddClass(overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord}"]`));
                 break;
             case "bombardment":
                 // a horizontal line 4 squares
                 for (i = 0; i < 4; i++) {
-                    if (overlayGrid.querySelector(`button[name="x${sqrXCoord + i}y${sqrYCoord}"]`) != null){
-                        overlayGrid.querySelector(`button[name="x${sqrXCoord + i}y${sqrYCoord}"]`).classList.add("squareHover");
-                    }
+                    squareHoverAddClass(overlayGrid.querySelector(`button[name="x${sqrXCoord + i}y${sqrYCoord}"]`));
                 }
                 break;
             case "none":
                 // one square
-                if (overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord}"]`) != null){
-                    overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord}"]`).classList.add("squareHover");
-                }
+                squareHoverAddClass(overlayGrid.querySelector(`button[name="x${sqrXCoord}y${sqrYCoord}"]`));
                 break;
         }
     }
-    function squareMouseOut(overlayGrid){
-        for (square of overlayGrid.children){
+    function squareHoverAddClass(square) {
+        if (square != null) {
+            square.classList.add("squareHover");
+        }
+    }
+    function squareMouseOut(overlayGrid) {
+        for (square of overlayGrid.children) {
             square.classList.remove("squareHover");
         }
     }
@@ -638,6 +661,17 @@ document.addEventListener(`DOMContentLoaded`, function () {
             if (abilityButton.name == "on") {
                 abilityButton.name = "off";
             }
+        }
+        // turn off scouting
+        let overlayGrid;
+        if (abilityList == playerOneAbilityListHTML){
+            overlayGrid = playerOneGrid;
+        }
+        else{
+            overlayGrid = playerTwoGrid;
+        }
+        for (square of overlayGrid.children){
+            square.classList.remove("scouting");
         }
     }
     function computerStuff() {
