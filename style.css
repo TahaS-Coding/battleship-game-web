@@ -122,11 +122,11 @@ canvas {
 
 .shipSelectionSection button {
     border: black solid .12vw;
-    border-radius: .5vw;
+    border-radius: .2vw;
 }
 
 #shipSelectionContinueButton {
-    border: black solid .2vw;
+    border: black solid .12vw;
     border-radius: .5vw;
 }
 
