@@ -223,18 +223,39 @@ dd {
     flex-flow: column wrap;
 }
 
+#gameScreen {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-rows: 7vh 79.5vh;
+    grid-template-areas:
+        "instruction instruction instruction3"
+        "left center right";
+}
+
+.instruction {
+    grid-area: instruction3;
+}
+
 .game-board-overlay {
+    display: flex;
+    flex-flow: column wrap;
+    grid-area: center;
     width: 50%;
-    margin: auto;
 }
 
 .game-board-overlay h1 {
+    width: 60vw;
+    margin-bottom: 1vh;
     text-align: center;
 }
 
 .overlay-two-column {
     display: flex;
     flex-flow: row nowrap;
+    align-self: center;
+    padding-top: 5vh;
+    width: 100%;
+    height: 70vh;
 }
 
 .column-left {
@@ -264,6 +285,18 @@ dd {
 }
 
 /* ability and heath bar CSS */
+.playerOneShipsHealth {
+    position: absolute;
+    top: 25%;
+    left: 10%;
+}
+
+.otherPlayerShipsHealth {
+    position: absolute;
+    top: 25%;
+    right: 10%;
+}
+
 .health-bar {
 
     width: 200px;
@@ -278,13 +311,23 @@ dd {
     text-align: center;
     transition: width 2s;
 }
-.squareHover{
+
+.squareHover {
     background-color: red;
 }
+
 @keyframes blink {
-    0%, 100% { background-color: #f0f0f0; }
-    50% { background-color: red; }
+
+    0%,
+    100% {
+        background-color: #f0f0f0;
+    }
+
+    50% {
+        background-color: red;
+    }
 }
-.scouting{
+
+.scouting {
     animation: blink 1s infinite;
 }
