@@ -9,6 +9,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
     let computerShipList = [];
     let playerOneAbilityList = [];
     let playerTwoAbilityList = [];
+    let computerAbilityList = {};
     let player = "p1";
 
     // game mode select screen
@@ -121,6 +122,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             gameplayScreen.classList.remove("hidden");
             createOverlays();
             createButtons(playerOneShipList, playerOneAbilityList, playerOneAbilityListHTML);
+            assignComputerShipsAndAbilities();
             createHealthBars();
             randomCoordinatesAllShips(playerOneShipList);
             randomCoordinatesAllShips(computerShipList);
@@ -256,31 +258,31 @@ document.addEventListener(`DOMContentLoaded`, function () {
                         scoutAbilityButton.innerText = abilityUsesLeft - 1;
 
                         let enemyShipList;
-                        if (abilityList == playerOneAbilityListHTML){
+                        if (abilityList == playerOneAbilityListHTML) {
                             enemyShipList = playerTwoShipList;
                         }
-                        else{
+                        else {
                             enemyShipList = playerOneShipList;
                         }
                         // all enemy ships still standing
                         let availableShips = [];
-                        for (ship of enemyShipList){
-                            if (ship.currHealth > 0){
+                        for (ship of enemyShipList) {
+                            if (ship.currHealth > 0) {
                                 availableShips.push(ship);
                             }
                         }
                         // get coordinates for each ship
                         let enemyShipCoordinates = [];
-                        for (ship of availableShips){
-                            enemyShipCoordinates.push({"xCoord": ship.xCoord, "yCoord": ship.yCoord});
+                        for (ship of availableShips) {
+                            enemyShipCoordinates.push({ "xCoord": ship.xCoord, "yCoord": ship.yCoord });
                         }
                         // choose one of these coordinates randomly 
                         let chosenCoord = enemyShipCoordinates[Math.floor(Math.random() * enemyShipCoordinates.length)];
                         // update that square on the overlay to start blinking
-                        if (enemyShipList == playerTwoShipList){
+                        if (enemyShipList == playerTwoShipList) {
                             playerOneGrid.querySelector(`button[name="x${chosenCoord.xCoord}y${chosenCoord.yCoord}"]`).classList.add("scouting");
                         }
-                        else if(enemyShipList == playerOneShipList){
+                        else if (enemyShipList == playerOneShipList) {
                             playerTwoGrid.querySelector(`button[name="x${chosenCoord.xCoord}y${chosenCoord.yCoord}"]`).classList.add("scouting");
                         }
                     }
@@ -308,6 +310,67 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 button.name = "on";
                 button.innerText = abilityUsesLeft - 1;
             }
+        }
+    }
+    function assignComputerShipsAndAbilities() {
+        // assign random ships
+        let randomNum = Math.random();
+        if (randomNum < 0.2) {
+            computerShipList.push(new AircraftCarrier());
+        }
+        else if (randomNum < 0.4) {
+            computerShipList.push(new Frigate());
+        }
+        else if (randomNum < 0.6) {
+            computerShipList.push(new Cruiser());
+        }
+        else if (randomNum < 0.8) {
+            computerShipList.push(new Destroyer());
+        }
+        else {
+            computerShipList.push(new Battleship());
+        }
+        // abilities
+        let abilityTypes = {
+            "airplane": 0,
+            "torpedo": 0,
+            "missile": 0,
+            "bombardment": 0
+        }
+        // create array of all abilities
+        let arrayOfAbilities = [];
+        for (let ship of computerShipList) {
+            arrayOfAbilities.push(ship.abilityName);
+        }
+        // how many of each ability
+        for (let ability of arrayOfAbilities) {
+            switch (ability) {
+                case "Airplane":
+                    abilityTypes.airplane += 1;
+                    break;
+                case "Torpedo":
+                    abilityTypes.torpedo += 1;
+                    break;
+                case "Missile":
+                    abilityTypes.missile += 1;
+                    break;
+                case "Bombardment":
+                    abilityTypes.bombardment += 1;
+                    break;
+            }
+        }
+        // push to computerAbilityList
+        if (abilityTypes.airplane > 0){
+            computerAbilityList.airplane = abilityTypes.airplane;
+        }
+        if(abilityTypes.torpedo > 0){
+            computerAbilityList.torpedo = abilityTypes.torpedo;
+        }
+        if(abilityTypes.missile > 0){
+            computerAbilityList.missile = abilityTypes.missile;
+        }
+        if(abilityTypes.bombardment > 0){
+            computerAbilityList.bombardment = abilityTypes.bombardment;
         }
     }
     // HEALTH BARS
@@ -680,13 +743,13 @@ document.addEventListener(`DOMContentLoaded`, function () {
         }
         // turn off scouting
         let overlayGrid;
-        if (abilityList == playerOneAbilityListHTML){
+        if (abilityList == playerOneAbilityListHTML) {
             overlayGrid = playerOneGrid;
         }
-        else{
+        else {
             overlayGrid = playerTwoGrid;
         }
-        for (square of overlayGrid.children){
+        for (square of overlayGrid.children) {
             square.classList.remove("scouting");
         }
     }
