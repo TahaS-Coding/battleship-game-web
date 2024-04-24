@@ -258,11 +258,16 @@ document.addEventListener(`DOMContentLoaded`, function () {
                         scoutAbilityButton.innerText = abilityUsesLeft - 1;
 
                         let enemyShipList;
-                        if (abilityList == playerOneAbilityListHTML) {
-                            enemyShipList = playerTwoShipList;
+                        if (gameMode == "computer"){
+                            enemyShipList = computerShipList;
                         }
-                        else {
-                            enemyShipList = playerOneShipList;
+                        else{
+                            if (abilityList == playerOneAbilityListHTML) {
+                                enemyShipList = playerTwoShipList;
+                            }
+                            else{
+                                enemyShipList = playerOneShipList;
+                            }
                         }
                         // all enemy ships still standing
                         let availableShips = [];
@@ -314,21 +319,23 @@ document.addEventListener(`DOMContentLoaded`, function () {
     }
     function assignComputerShipsAndAbilities() {
         // assign random ships
-        let randomNum = Math.random();
-        if (randomNum < 0.2) {
-            computerShipList.push(new AircraftCarrier());
-        }
-        else if (randomNum < 0.4) {
-            computerShipList.push(new Frigate());
-        }
-        else if (randomNum < 0.6) {
-            computerShipList.push(new Cruiser());
-        }
-        else if (randomNum < 0.8) {
-            computerShipList.push(new Destroyer());
-        }
-        else {
-            computerShipList.push(new Battleship());
+        for (let i = 0; i < 5; i++){
+            let randomNum = Math.random();
+            if (randomNum < 0.2) {
+                computerShipList.push(new AircraftCarrier());
+            }
+            else if (randomNum < 0.4) {
+                computerShipList.push(new Frigate());
+            }
+            else if (randomNum < 0.6) {
+                computerShipList.push(new Cruiser());
+            }
+            else if (randomNum < 0.8) {
+                computerShipList.push(new Destroyer());
+            }
+            else {
+                computerShipList.push(new Battleship());
+            }
         }
         // abilities
         let abilityTypes = {
@@ -360,17 +367,10 @@ document.addEventListener(`DOMContentLoaded`, function () {
             }
         }
         // push to computerAbilityList
-        if (abilityTypes.airplane > 0){
-            computerAbilityList.airplane = abilityTypes.airplane;
-        }
-        if(abilityTypes.torpedo > 0){
-            computerAbilityList.torpedo = abilityTypes.torpedo;
-        }
-        if(abilityTypes.missile > 0){
-            computerAbilityList.missile = abilityTypes.missile;
-        }
-        if(abilityTypes.bombardment > 0){
-            computerAbilityList.bombardment = abilityTypes.bombardment;
+        for (ability in abilityTypes) {
+            if (ability > 0) {
+                computerAbilityList.ability = ability;
+            }
         }
     }
     // HEALTH BARS
@@ -670,31 +670,57 @@ document.addEventListener(`DOMContentLoaded`, function () {
         }
         // for all coordinates that are hit that turn, sees if any ships are on those coordinates, will decrease their health if there are any
         let abilityList;
-        if (shipList == playerOneShipList) {
-            abilityList = playerTwoAbilityListHTML;
+        if (gameMode == "computer") {
+            if (shipList == playerOneShipList) {
+                abilityList = computerAbilityList;
+            }
+            else {
+                abilityList = playerOneAbilityListHTML;
+            }
         }
-        else {
-            abilityList = playerOneAbilityListHTML;
+        else if (gameMode == "player") {
+            if (shipList == playerOneShipList) {
+                abilityList = playerTwoAbilityListHTML;
+            }
+            else if (shipList == playerTwoShipList) {
+                abilityList = playerOneAbilityListHTML;
+            }
         }
+
         let activeAbility = "none";
-        for (let abilityButton of abilityList.children) {
-            if (abilityButton.name == "on") {
-                switch (abilityButton.getAttribute("class")) {
-                    case "airplaneAbilityButton":
-                        activeAbility = "airplane";
-                        break;
-                    case "torpedoAbilityButton":
-                        activeAbility = "torpedo";
-                        break;
-                    case "missileAbilityButton":
-                        activeAbility = "missile";
-                        break;
-                    case "bombardmentAbilityButton":
-                        activeAbility = "bombardment";
-                        break;
+        // get any active ability if player, get random ability or no ability if computer
+        if (abilityList != computerAbilityList) {
+            for (let abilityButton of abilityList.children) {
+                if (abilityButton.name == "on") {
+                    switch (abilityButton.getAttribute("class")) {
+                        case "airplaneAbilityButton":
+                            activeAbility = "airplane";
+                            break;
+                        case "torpedoAbilityButton":
+                            activeAbility = "torpedo";
+                            break;
+                        case "missileAbilityButton":
+                            activeAbility = "missile";
+                            break;
+                        case "bombardmentAbilityButton":
+                            activeAbility = "bombardment";
+                            break;
+                    }
                 }
             }
         }
+        else {
+            // get array of all computer abilities
+            let computerAbilities = Object.keys(computerAbilityList);
+
+            // 20% chance to use an ability
+            let randomNum = Math.random();
+            if (randomNum < 0.2) {
+                activeAbility = computerAbilities[Math.floor(Math.random() * computerAbilities.length)];
+            }
+        }
+
+
         let arrayOfHitCoordinates = [];
         switch (activeAbility) {
             case "airplane":
@@ -709,25 +735,37 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 arrayOfHitCoordinates.push({ "xCoord": sqrXCoord + 1, "yCoord": sqrYCoord + 1 });
                 arrayOfHitCoordinates.push({ "xCoord": sqrXCoord - 1, "yCoord": sqrYCoord + 1 });
                 attack(shipList, arrayOfHitCoordinates, 1);
+                if (player == "ai"){
+                    computerAbilityList.airplane -= 1;
+                }
                 break;
             case "torpedo":
                 // a vertical line 5 squares
-                for (i = 0; i < 5; i++) {
+                for (let i = 0; i < 5; i++) {
                     arrayOfHitCoordinates.push({ "xCoord": sqrXCoord, "yCoord": sqrYCoord + i });
                 }
                 attack(shipList, arrayOfHitCoordinates, 1);
+                if (player == "ai"){
+                    computerAbilityList.torpedo -= 1;
+                }
                 break;
             case "missile":
                 // one square but more damage
                 arrayOfHitCoordinates.push({ "xCoord": sqrXCoord, "yCoord": sqrYCoord });
                 attack(shipList, arrayOfHitCoordinates, 2);
+                if (player == "ai"){
+                    computerAbilityList.missile -= 1;
+                }
                 break;
             case "bombardment":
                 // a horizontal line 4 squares
-                for (i = 0; i < 4; i++) {
+                for (let i = 0; i < 4; i++) {
                     arrayOfHitCoordinates.push({ "xCoord": sqrXCoord + i, "yCoord": sqrYCoord });
                 }
                 attack(shipList, arrayOfHitCoordinates, 1);
+                if (player == "ai"){
+                    computerAbilityList.bombardment -= 1;
+                }
                 break;
             case "none":
                 // just the one square
@@ -736,9 +774,11 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 break;
         }
         // now turn off the active abilities
-        for (let abilityButton of abilityList.children) {
-            if (abilityButton.name == "on") {
-                abilityButton.name = "off";
+        if (player != "ai"){
+            for (let abilityButton of abilityList.children) {
+                if (abilityButton.name == "on") {
+                    abilityButton.name = "off";
+                }
             }
         }
         // turn off scouting
@@ -754,7 +794,19 @@ document.addEventListener(`DOMContentLoaded`, function () {
         }
     }
     function computerStuff() {
+        player = "ai";
+        let clickedSqrID = `x${rng()}y${rng()}`;
+        hitCoordinate(clickedSqrID);
+        updateHealth();
+        moveShips(computerShipList);
+        // delete any depleted abilties
+        for (let ability in computerAbilityList) {
+            if (ability < 1) {
+                delete computerAbilityList[ability];
+            }
+        }
 
+        player = "p1";
     }
     function attack(shipList, hitCoordinates, damage) {
         console.log(hitCoordinates);
