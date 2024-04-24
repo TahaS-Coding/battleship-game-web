@@ -33,7 +33,9 @@ header {
     align-items: center;
 }
 
-.main {
+main {
+    background-color: #7D7D7D;
+    color: white;
     grid-area: content;
     display: grid;
 }
@@ -95,10 +97,16 @@ canvas {
 
 .gameSelection {
     display: flex;
+    flex-flow: column wrap;
     align-items: center;
     justify-content: space-between;
-    margin: 0 25vw;
-    height: 80vh;
+    margin: 15vh 25vw;
+    height: 40vh;
+}
+
+.gameSelection img {
+    width: 15vw;
+    height: 15vw;
 }
 
 .gameSelection button {
@@ -138,11 +146,21 @@ canvas {
 
 .shipOptions {
     display: flex;
-    flex-flow: column wrap;
+    flex-flow: column;
+    overflow: scroll;
+    color: white;
+    padding: 0 1vw;
+    background-color: #1C275F;
+    border: 0.1vw black solid;
     width: 20rem;
+    height: 40vw;
 }
 
 .shipOptions h3 {
+    position: sticky;
+    padding-top: 0.5vw;
+    background-color: #1C275F;
+    top: 0;
     font-size: 2rem;
 }
 
@@ -188,6 +206,15 @@ dd {
     align-self: flex-end;
 }
 
+.chosenList {
+    color: white;
+    padding: 0 1vw;
+    background-color: #1C275F;
+    border: 0.1vw black solid;
+    width: 20rem;
+    height: 40vw;
+}
+
 #chosenShips {
     width: 20rem;
 }
@@ -220,6 +247,7 @@ dd {
 #shipSelectionContinueButton {
     height: 2rem;
     width: 5rem;
+    margin-top: 1vw;
     align-items: center;
     justify-content: center;
     position: relative;
@@ -236,6 +264,7 @@ dd {
         "left center right";
 }
 
+/* Leave alone this is positioning the instruction button */
 .instruction {
     grid-area: instruction3;
 }
@@ -305,7 +334,7 @@ dd {
 
     width: 200px;
     height: 20px;
-    background-color: gray;
+    background-color: rgb(75, 75, 75);
 }
 
 .health-bar-fill {
@@ -336,35 +365,39 @@ dd {
     animation: blink 1s infinite;
 }
 
-.airplaneAbilityButton{
+.airplaneAbilityButton {
     background-image: url(images/airplane.png);
     background-size: cover;
     height: 50px;
     width: 50px;
     border-radius: 50px;
 }
-.torpedoAbilityButton{
+
+.torpedoAbilityButton {
     background-image: url(images/torpedo.png);
     background-size: cover;
     height: 50px;
     width: 50px;
     border-radius: 50px;
 }
-.missileAbilityButton{
+
+.missileAbilityButton {
     background-image: url(images/missile.png);
     background-size: cover;
     height: 50px;
     width: 50px;
     border-radius: 50px;
 }
-.bombardmentAbilityButton{
+
+.bombardmentAbilityButton {
     background-image: url(images/bombardment.png);
     background-size: cover;
     height: 50px;
     width: 50px;
     border-radius: 50px;
 }
-.scoutAbilityButton{
+
+.scoutAbilityButton {
     background-image: url(images/scout.png);
     background-size: cover;
     height: 50px;
@@ -372,7 +405,11 @@ dd {
     border-radius: 50px;
 }
 
-.airplaneAbilityButton, .torpedoAbilityButton, .missileAbilityButton, .bombardmentAbilityButton, .scoutAbilityButton{
+.airplaneAbilityButton,
+.torpedoAbilityButton,
+.missileAbilityButton,
+.bombardmentAbilityButton,
+.scoutAbilityButton {
     color: white;
     font-size: 25px;
     font-weight: bold;
