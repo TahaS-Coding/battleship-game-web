@@ -284,7 +284,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
                         // choose one of these coordinates randomly 
                         let chosenCoord = enemyShipCoordinates[Math.floor(Math.random() * enemyShipCoordinates.length)];
                         // update that square on the overlay to start blinking
-                        if (enemyShipList == playerTwoShipList) {
+                        if (enemyShipList == playerTwoShipList || enemyShipList == computerShipList) {
                             playerOneGrid.querySelector(`button[name="x${chosenCoord.xCoord}y${chosenCoord.yCoord}"]`).classList.add("scouting");
                         }
                         else if (enemyShipList == playerOneShipList) {
@@ -420,6 +420,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         return shipHealthElement;
     }
     function updateHealth() {
+        // update health bars
         if (gameMode == "player") {
             updateHealthHTML(playerOneShipList, playerOneHealth);
             updateHealthHTML(playerTwoShipList, playerTwoOrComputerHealth);
@@ -427,6 +428,49 @@ document.addEventListener(`DOMContentLoaded`, function () {
         else if (gameMode == "computer") {
             updateHealthHTML(playerOneShipList, playerOneHealth);
             updateHealthHTML(computerShipList, playerTwoOrComputerHealth);
+        }
+        // check if game over
+        let shipLists;
+        if (gameMode == "player"){
+            shipLists = [playerOneShipList, playerTwoShipList];
+        }
+        else if(gameMode == "computer"){
+            shipLists = [playerOneShipList, computerShipList];
+        }
+        let gameOver = true;
+        let loser;
+        for (let shipList of shipLists){
+            for (let ship of shipList){
+                if (ship.currHealth > 0){
+                    gameOver = false;
+                }
+                else if(ship.currHealth < 1){
+                    switch (shipList){
+                        case playerOneShipList:
+                            loser = "Player One";
+                            break;
+                        case playerTwoShipList:
+                            loser = "Player Two";
+                            break;
+                        case computerShipList:
+                            loser = "Computer";
+                            break;
+                    }
+                }
+            }
+        }
+        if (gameOver == true){
+            switch (loser){
+                case 'Player One':
+
+                    break;
+                case 'Player Two':
+                    
+                    break;
+                case 'Player Computer':
+                    
+                    break;
+            }
         }
     }
     function updateHealthHTML(shipList, healthList) {
@@ -437,8 +481,10 @@ document.addEventListener(`DOMContentLoaded`, function () {
             let healthNumberElement = shipHealthElement.querySelector('.health-number');
 
             let ship = shipList[i];
-            healthBarFillElement.style.width = `${(ship.currHealth / ship.health) * 100}%`;
-            healthNumberElement.innerText = ship.currHealth;
+            if (ship.currHealth >= 0){
+                healthBarFillElement.style.width = `${(ship.currHealth / ship.health) * 100}%`;
+                healthNumberElement.innerText = ship.currHealth;
+            }
         }
     }
 
@@ -460,6 +506,10 @@ document.addEventListener(`DOMContentLoaded`, function () {
             }
         });
     }
+
+    // game over overlay
+    let gameOverScreen = document.querySelector(".game-over-screen");
+    let gameOverText = document.get;
 
 
 
