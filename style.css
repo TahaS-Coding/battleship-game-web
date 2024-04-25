@@ -210,6 +210,7 @@ dd {
 
 .chosenList {
     color: white;
+    overflow: hidden;
     padding: 0 1vw;
     background-color: #1C275F;
     border: 0.1vw black solid;
@@ -222,6 +223,9 @@ dd {
 }
 
 #chosenShips h3 {
+    padding-top: 0.5vw;
+    background-color: #1C275F;
+    top: 0;
     font-size: 2rem;
 }
 
