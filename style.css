@@ -70,11 +70,12 @@ canvas {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: grey;
+    background-color: rgb(62, 62, 62);
     width: 30vw;
     height: 65vh;
     display: flex;
     flex-flow: column wrap;
+    z-index: 1;
 }
 
 .closeInstructionsOverlay {
@@ -82,6 +83,7 @@ canvas {
     height: 2vw;
     font-size: 1.5vw;
     background-color: rgba(0, 0, 0, 0);
+    color: white;
     border: none;
     display: flex;
     justify-content: center;
@@ -153,7 +155,7 @@ canvas {
     background-color: #1C275F;
     border: 0.1vw black solid;
     width: 20rem;
-    height: 40vw;
+    height: 75vh;
 }
 
 .shipOptions h3 {
@@ -212,7 +214,7 @@ dd {
     background-color: #1C275F;
     border: 0.1vw black solid;
     width: 20rem;
-    height: 40vw;
+    height: 75vh;
 }
 
 #chosenShips {
