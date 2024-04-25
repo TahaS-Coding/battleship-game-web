@@ -460,7 +460,17 @@ document.addEventListener(`DOMContentLoaded`, function () {
             }
         }
         if (gameOver == true){
-            console.log("game over");
+            switch (loser){
+                case 'Player One':
+
+                    break;
+                case 'Player Two':
+                    
+                    break;
+                case 'Player Computer':
+                    
+                    break;
+            }
         }
     }
     function updateHealthHTML(shipList, healthList) {
@@ -496,6 +506,10 @@ document.addEventListener(`DOMContentLoaded`, function () {
             }
         });
     }
+
+    // game over overlay
+    let gameOverScreen = document.querySelector(".game-over-screen");
+    let gameOverText = document.get;
 
 
 
