@@ -460,15 +460,21 @@ document.addEventListener(`DOMContentLoaded`, function () {
             }
         }
         if (gameOver == true){
+            gameOverScreen.classList.remove("hidden");
             switch (loser){
                 case 'Player One':
-
+                    if (gameMode == "computer"){
+                        gameOverText = "Computer Wins";
+                    }
+                    else{
+                        gameOverText = "Player Two Wins";
+                    }
                     break;
                 case 'Player Two':
-                    
+                    gameOverText = "Player One Wins";
                     break;
-                case 'Player Computer':
-                    
+                case 'Computer':
+                    gameOverText = "Player One Wins";
                     break;
             }
         }
@@ -509,7 +515,11 @@ document.addEventListener(`DOMContentLoaded`, function () {
 
     // game over overlay
     let gameOverScreen = document.querySelector(".game-over-screen");
-    let gameOverText = document.get;
+    let gameOverText = document.getElementById("gameOverText").innerText;
+    let restartButton = document.getElementById("restart");
+    restartButton.addEventListener("click", function(){
+        location.reload();
+    });
 
 
 
@@ -1022,7 +1032,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
                     checkCoordValidity(shipList) ? ship.rotation = "horizontal" : ship.rotation = "vertical";
                 }
             }
-            // 50% chance to move
+            // 75% chance to move
             else {
                 // wont move if it messed up coordinate validity. Can move the amount of squares equivalent to or less than ship.speed value in its rotations direction
                 let shipMovementRange = Math.floor(Math.random() * (ship.speed - (ship.speed * -1) + 1)) + (ship.speed * -1);
