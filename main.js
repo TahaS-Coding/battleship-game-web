@@ -179,16 +179,16 @@ document.addEventListener(`DOMContentLoaded`, function () {
         for (let ability of ablitityArray) {
             switch (ability) {
                 case "Airplane":
-                    airplane += 1;
+                    airplane += 3;
                     break;
                 case "Torpedo":
-                    torpedo += 1;
+                    torpedo += 3;
                     break;
                 case "Missile":
-                    missile += 1;
+                    missile += 3;
                     break;
                 case "Bombardment":
-                    bombardment += 1;
+                    bombardment += 3;
                     break;
                 case "Scout":
                     scout += 1;
@@ -445,6 +445,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
                     gameOver = false;
                 }
                 else if(ship.currHealth < 1){
+                    gameOver = true;
                     switch (shipList){
                         case playerOneShipList:
                             loser = "Player One";
@@ -477,6 +478,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
                     gameOverText = "Player One Wins";
                     break;
             }
+            console.log("game over");
         }
     }
     function updateHealthHTML(shipList, healthList) {
