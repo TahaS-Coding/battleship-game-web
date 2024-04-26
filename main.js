@@ -31,6 +31,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
     let shipSelectionScreen = document.getElementById('shipSelection');
     let shipSelectionContinueButton = document.getElementById("shipSelectionContinueButton");
     let chosenShips = document.getElementById("chosenShips");
+    let whoseShipsBeingSelectedHeading = document.getElementById("whoseShipsBeingSelected");
     let addCarrierButton = document.getElementById("addCarrier");
     let addDestroyerButton = document.getElementById("addDestroyer");
     let addCruiserButton = document.getElementById("addCruiser");
@@ -133,6 +134,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
         //player vs player
         if (gameMode == "player" && playerOneShipsSelected == true && selectingPlayerTwoShips == false) {
             chosenShips.innerHTML = "";
+            whoseShipsBeingSelectedHeading.innerText = "Player Two Ships";
             selectingPlayerTwoShips = true;
         }
         else if (gameMode == "player" && playerOneShipsSelected == false) {
