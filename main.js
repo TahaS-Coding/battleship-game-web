@@ -260,14 +260,14 @@ document.addEventListener(`DOMContentLoaded`, function () {
                         scoutAbilityButton.innerText = abilityUsesLeft - 1;
 
                         let enemyShipList;
-                        if (gameMode == "computer"){
+                        if (gameMode == "computer") {
                             enemyShipList = computerShipList;
                         }
-                        else{
+                        else {
                             if (abilityList == playerOneAbilityListHTML) {
                                 enemyShipList = playerTwoShipList;
                             }
-                            else{
+                            else {
                                 enemyShipList = playerOneShipList;
                             }
                         }
@@ -321,7 +321,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
     }
     function assignComputerShipsAndAbilities() {
         // assign random ships
-        for (let i = 0; i < 5; i++){
+        for (let i = 0; i < 5; i++) {
             let randomNum = Math.random();
             if (randomNum < 0.2) {
                 computerShipList.push(new AircraftCarrier());
@@ -433,24 +433,24 @@ document.addEventListener(`DOMContentLoaded`, function () {
         }
         // check if game over
         let shipLists;
-        if (gameMode == "player"){
+        if (gameMode == "player") {
             shipLists = [playerOneShipList, playerTwoShipList];
         }
-        else if(gameMode == "computer"){
+        else if (gameMode == "computer") {
             shipLists = [playerOneShipList, computerShipList];
         }
         let gameOver = false;
         let loser;
-        for (let shipList of shipLists){
+        for (let shipList of shipLists) {
             let shipsDefeated = 0;
-            for (let ship of shipList){
-                if(ship.currHealth < 1){
+            for (let ship of shipList) {
+                if (ship.currHealth < 1) {
                     shipsDefeated += 1
                 }
             }
-            if (shipsDefeated == 5){
+            if (shipsDefeated == 5) {
                 gameOver = true;
-                switch (shipList){
+                switch (shipList) {
                     case playerOneShipList:
                         loser = "Player One";
                         break;
@@ -463,14 +463,14 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 }
             }
         }
-        if (gameOver == true){
+        if (gameOver == true) {
             gameOverScreen.classList.remove("hidden");
-            switch (loser){
+            switch (loser) {
                 case 'Player One':
-                    if (gameMode == "computer"){
+                    if (gameMode == "computer") {
                         gameOverText.innerText = "Computer Wins";
                     }
-                    else{
+                    else {
                         gameOverText.innerText = "Player Two Wins";
                     }
                     break;
@@ -492,7 +492,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             let healthNumberElement = shipHealthElement.querySelector('.health-number');
 
             let ship = shipList[i];
-            if (ship.currHealth >= 0){
+            if (ship.currHealth >= 0) {
                 healthBarFillElement.style.width = `${(ship.currHealth / ship.health) * 100}%`;
                 healthNumberElement.innerText = ship.currHealth;
             }
@@ -522,7 +522,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
     let gameOverScreen = document.querySelector(".game-over-screen");
     let gameOverText = document.getElementById("gameOverText");
     let restartButton = document.getElementById("restart");
-    restartButton.addEventListener("click", function(){
+    restartButton.addEventListener("click", function () {
         location.reload();
     });
 
@@ -603,6 +603,9 @@ document.addEventListener(`DOMContentLoaded`, function () {
                     let clickedSqrID = this.getAttribute("name");
                     squareMouseOut(playerTwoGrid);
                 });
+                // for displaying previous hits
+                newSquare.hitState = "none";
+                newSquareClone.hitState = "none";
                 // append square to html grid
                 if (gameMode == "player") {
                     playerOneGrid.appendChild(newSquare);
@@ -800,7 +803,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 arrayOfHitCoordinates.push({ "xCoord": sqrXCoord + 1, "yCoord": sqrYCoord + 1 });
                 arrayOfHitCoordinates.push({ "xCoord": sqrXCoord - 1, "yCoord": sqrYCoord + 1 });
                 attack(shipList, arrayOfHitCoordinates, 1);
-                if (player == "ai"){
+                if (player == "ai") {
                     computerAbilityList.airplane -= 1;
                 }
                 break;
@@ -810,7 +813,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
                     arrayOfHitCoordinates.push({ "xCoord": sqrXCoord, "yCoord": sqrYCoord + i });
                 }
                 attack(shipList, arrayOfHitCoordinates, 1);
-                if (player == "ai"){
+                if (player == "ai") {
                     computerAbilityList.torpedo -= 1;
                 }
                 break;
@@ -818,7 +821,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 // one square but more damage
                 arrayOfHitCoordinates.push({ "xCoord": sqrXCoord, "yCoord": sqrYCoord });
                 attack(shipList, arrayOfHitCoordinates, 2);
-                if (player == "ai"){
+                if (player == "ai") {
                     computerAbilityList.missile -= 1;
                 }
                 break;
@@ -828,7 +831,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
                     arrayOfHitCoordinates.push({ "xCoord": sqrXCoord + i, "yCoord": sqrYCoord });
                 }
                 attack(shipList, arrayOfHitCoordinates, 1);
-                if (player == "ai"){
+                if (player == "ai") {
                     computerAbilityList.bombardment -= 1;
                 }
                 break;
@@ -839,7 +842,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 break;
         }
         // now turn off the active abilities
-        if (player != "ai"){
+        if (player != "ai") {
             for (let abilityButton of abilityList.children) {
                 if (abilityButton.name == "on") {
                     abilityButton.name = "off";
@@ -874,19 +877,120 @@ document.addEventListener(`DOMContentLoaded`, function () {
         player = "p1";
     }
     function attack(shipList, hitCoordinates, damage) {
-        console.log(hitCoordinates);
+        // for adding hit states to squares
+        let grid = null;
+        if (shipList == playerTwoShipList || shipList == computerShipList) {
+            grid = playerOneGrid;
+        }
+        else if (shipList == playerOneShipList && gameMode == "player") {
+            grid = playerTwoGrid;
+        }
+        updateAllSquareStates(grid);
+        // attack ships
         for (let coordinate of hitCoordinates) {
             for (let ship of shipList) {
+                let anyShipHit = false;
                 if (ship.rotation == "horizontal" && ship.yCoord == coordinate.yCoord) {
                     if (coordinate.xCoord <= ship.xCoord && coordinate.xCoord > ship.xCoord - ship.size) {
                         ship.currHealth -= damage;
+                        anyShipHit = true;
                         console.log(`hit ${ship.name} at ${coordinate.xCoord}, ${coordinate.yCoord}`);
                     }
                 }
                 else if (ship.rotation == "vertical" && ship.xCoord == coordinate.xCoord) {
                     if (coordinate.yCoord <= ship.yCoord && coordinate.yCoord > ship.yCoord - ship.size) {
                         ship.currHealth -= damage;
+                        anyShipHit = true;
                         console.log(`hit ${ship.name} at ${coordinate.xCoord}, ${coordinate.yCoord}`);
+                    }
+                }
+
+                if (anyShipHit == true) {
+                    updateSingleSquareState(grid, coordinate, true);
+                }
+                else if (anyShipHit == false) {
+                    updateSingleSquareState(grid, coordinate, false);
+                }
+            }
+        }
+
+        updateSquareStatesStyle(grid);
+    }
+
+    // updating square states
+    function updateSingleSquareState(grid, coordinate, hitShip) {
+        let squareElement = grid.querySelector(`button[name="x${coordinate.xCoord}y${coordinate.yCoord}"]`);
+        if (grid != null) {
+            if (hitShip == true) {
+                squareElement.hitState = "hitOne";
+            }
+            else if (hitShip == false) {
+                squareElement.hitState = "missOne";
+            }
+        }
+    }
+    function updateAllSquareStates(grid) {
+        if (grid != null) {
+            for (rows = 13; rows > 0; rows--) {
+                for (columns = 1; columns < 14; columns++) {
+                    let squareElement = grid.querySelector(`button[name="x${columns}y${rows}"]`);
+                    switch (squareElement.hitState) {
+                        case "hitOne":
+                            squareElement.hitState = "hitTwo";
+                            break;
+                        case "hitTwo":
+                            squareElement.hitState = "hitThree";
+                            break;
+                        case "hitThree":
+                            squareElement.hitState = "none";
+                            break;
+                        case "missOne":
+                            squareElement.hitState = "missTwo";
+                            break;
+                        case "missTwo":
+                            squareElement.hitState = "missThree";
+                            break;
+                        case "missThree":
+                            squareElement.hitState = "none";
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    function updateSquareStatesStyle(grid) {
+        if (grid != null) {
+            for (rows = 13; rows > 0; rows--) {
+                for (columns = 1; columns < 14; columns++) {
+                    let squareElement = grid.querySelector(`button[name="x${columns}y${rows}"]`);
+                    switch (squareElement.hitState) {
+                        case "hitOne":
+                            squareElement.classList.remove("hitOne", "hitTwo", "hitThree", "missOne", "missTwo", 'missThree');
+                            squareElement.classList.add("hitOne");
+                            break;
+                        case "hitTwo":
+                            squareElement.classList.remove("hitOne", "hitTwo", "hitThree", "missOne", "missTwo", 'missThree');
+                            squareElement.classList.add("hitTwo");
+                            break;
+                        case "hitThree":
+                            squareElement.classList.remove("hitOne", "hitTwo", "hitThree", "missOne", "missTwo", 'missThree');
+                            squareElement.classList.add("hitThree");
+                            break;
+                        case "missOne":
+                            squareElement.classList.remove("hitOne", "hitTwo", "hitThree", "missOne", "missTwo", 'missThree');
+                            squareElement.classList.add("missOne");
+                            break;
+                        case "missTwo":
+                            squareElement.classList.remove("hitOne", "hitTwo", "hitThree", "missOne", "missTwo", 'missThree');
+                            squareElement.classList.add("missTwo");
+                            break;
+                        case "missThree":
+                            squareElement.classList.remove("hitOne", "hitTwo", "hitThree", "missOne", "missTwo", 'missThree');
+                            squareElement.classList.add("missThree");
+                            break;
+                        case "none":
+                            squareElement.classList.remove("hitOne", "hitTwo", "hitThree", "missOne", "missTwo", 'missThree');
+                            break;
                     }
                 }
             }

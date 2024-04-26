@@ -477,6 +477,29 @@ dd {
     font-size: 2rem;
 }
 
+.hitOne{
+    background-color: orange;
+}
+.hitTwo{
+    background-color: orange;
+    opacity: 0.7;
+}
+.hitThree{
+    background-color: orange;
+    opacity: 0.4;
+}
+.missOne{
+    background-color: yellow;
+}
+.missTwo{
+    background-color: yellow;
+    opacity: 0.7;
+}
+.missThree{
+    background-color: yellow;
+    opacity: 0.4;
+}
+
 @media screen and (orientation:portrait) {
     .rotate-screen {
         display: flex;
