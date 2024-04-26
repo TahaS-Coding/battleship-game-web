@@ -90,7 +90,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 }
             }
             else if (gameMode == "computer" && playerOneShipsSelected == true) {
-                alert("ships full");
+                // alert("ships full");
             }
             // player vs player
             if (gameMode == "player" && playerOneShipsSelected == false) {
@@ -101,7 +101,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 }
             }
             else if (gameMode == "player" && playerOneShipsSelected == true && selectingPlayerTwoShips == false) {
-                alert("ships full");
+                // alert("ships full");
             }
             else if (gameMode == "player" && playerTwoShipsSelected == false) {
                 playerTwoShipList.push(ship);
@@ -111,7 +111,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
                 }
             }
             else if (gameMode == "player" && playerTwoShipsSelected == true) {
-                alert("ships full");
+                // alert("ships full");
             }
         });
     }
