@@ -437,26 +437,27 @@ document.addEventListener(`DOMContentLoaded`, function () {
         else if(gameMode == "computer"){
             shipLists = [playerOneShipList, computerShipList];
         }
-        let gameOver = true;
+        let gameOver = false;
         let loser;
         for (let shipList of shipLists){
+            let shipsDefeated = 0;
             for (let ship of shipList){
-                if (ship.currHealth > 0){
-                    gameOver = false;
+                if(ship.currHealth < 1){
+                    shipsDefeated += 1
                 }
-                else if(ship.currHealth < 1){
-                    gameOver = true;
-                    switch (shipList){
-                        case playerOneShipList:
-                            loser = "Player One";
-                            break;
-                        case playerTwoShipList:
-                            loser = "Player Two";
-                            break;
-                        case computerShipList:
-                            loser = "Computer";
-                            break;
-                    }
+            }
+            if (shipsDefeated == 5){
+                gameOver = true;
+                switch (shipList){
+                    case playerOneShipList:
+                        loser = "Player One";
+                        break;
+                    case playerTwoShipList:
+                        loser = "Player Two";
+                        break;
+                    case computerShipList:
+                        loser = "Computer";
+                        break;
                 }
             }
         }
@@ -465,17 +466,17 @@ document.addEventListener(`DOMContentLoaded`, function () {
             switch (loser){
                 case 'Player One':
                     if (gameMode == "computer"){
-                        gameOverText = "Computer Wins";
+                        gameOverText.innerText = "Computer Wins";
                     }
                     else{
-                        gameOverText = "Player Two Wins";
+                        gameOverText.innerText = "Player Two Wins";
                     }
                     break;
                 case 'Player Two':
-                    gameOverText = "Player One Wins";
+                    gameOverText.innerText = "Player One Wins";
                     break;
                 case 'Computer':
-                    gameOverText = "Player One Wins";
+                    gameOverText.innerText = "Player One Wins";
                     break;
             }
             console.log("game over");
@@ -517,7 +518,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
 
     // game over overlay
     let gameOverScreen = document.querySelector(".game-over-screen");
-    let gameOverText = document.getElementById("gameOverText").innerText;
+    let gameOverText = document.getElementById("gameOverText");
     let restartButton = document.getElementById("restart");
     restartButton.addEventListener("click", function(){
         location.reload();
@@ -1026,11 +1027,11 @@ document.addEventListener(`DOMContentLoaded`, function () {
             if (randomNum < 0.25) {
                 // wont do the rotate if it messed up coordinate validity, otherwise will change rotation
                 if (ship.rotation == "horizontal") {
-                    ship.rotation == "vertical";
+                    ship.rotation = "vertical";
                     checkCoordValidity(shipList) ? ship.rotation = "vertical" : ship.rotation = "horizontal";
                 }
                 else if (ship.rotation == "vertical") {
-                    ship.rotation == "horizontal";
+                    ship.rotation = "horizontal";
                     checkCoordValidity(shipList) ? ship.rotation = "horizontal" : ship.rotation = "vertical";
                 }
             }

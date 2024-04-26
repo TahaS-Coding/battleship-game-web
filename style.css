@@ -421,8 +421,19 @@ dd {
     font-weight: bold;
 }
 
+.game-over-screen {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center; 
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #7D7D7D;
+    z-index: 1000;
+}
+
 @media screen and (orientation:portrait) {
-    .rotate-screen{
+    .rotate-screen {
         display: flex;
         flex-flow: column wrap;
         align-items: center;
@@ -432,13 +443,15 @@ dd {
         background-color: #7D7D7D;
         z-index: 1000;
     }
-    .rotate-screen img{
+
+    .rotate-screen img {
         width: 300px;
         height: 200px;
     }
 }
- @media screen and (orientation:landscape) {
-    .rotate-screen{
+
+@media screen and (orientation:landscape) {
+    .rotate-screen {
         display: none;
     }
- }
+}
