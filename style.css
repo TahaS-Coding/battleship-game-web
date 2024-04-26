@@ -8,10 +8,6 @@
     display: none !important;
 }
 
-::-webkit-scrollbar {
-    width: 0px;
-}
-
 body {
     width: 100vw;
     height: 10rem;
@@ -178,7 +174,7 @@ button:active {
 .shipOptions {
     display: flex;
     flex-flow: column;
-    overflow: scroll;
+    overflow-y: scroll;
     color: white;
     padding: 0 1vw;
     background-color: #1C275F;
@@ -208,7 +204,7 @@ button:active {
 
 dl {
     display: grid;
-    grid-template-columns: 50px 10rem;
+    grid-template-columns: 50px 12rem;
     grid-template-rows: 1fr;
 }
 
@@ -223,7 +219,7 @@ dt {
 dd {
     display: flex;
     font-size: 1rem;
-    padding-bottom: 1.5vw;
+    padding-bottom: .5vw;
     padding-left: .5vw;
 }
 
