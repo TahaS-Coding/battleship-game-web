@@ -129,7 +129,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             randomCoordinatesAllShips(computerShipList);
         }
         else if (gameMode == "computer" && playerOneShipsSelected == false) {
-            alert("choose 5 ships");
+            // alert("choose 5 ships");
         }
         //player vs player
         if (gameMode == "player" && playerOneShipsSelected == true && selectingPlayerTwoShips == false) {
@@ -138,7 +138,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             selectingPlayerTwoShips = true;
         }
         else if (gameMode == "player" && playerOneShipsSelected == false) {
-            alert("choose 5 ships");
+            // alert("choose 5 ships");
         }
         else if (gameMode == "player" && playerTwoShipsSelected == true) {
             shipSelectionScreen.classList.add("hidden");
@@ -151,7 +151,7 @@ document.addEventListener(`DOMContentLoaded`, function () {
             randomCoordinatesAllShips(playerTwoShipList);
         }
         else if (gameMode == "player" && playerTwoShipsSelected == false) {
-            alert("choose 5 ships");
+            // alert("choose 5 ships");
         }
     });
 
@@ -888,8 +888,8 @@ document.addEventListener(`DOMContentLoaded`, function () {
         updateAllSquareStates(grid);
         // attack ships
         for (let coordinate of hitCoordinates) {
+            let anyShipHit = false;
             for (let ship of shipList) {
-                let anyShipHit = false;
                 if (ship.rotation == "horizontal" && ship.yCoord == coordinate.yCoord) {
                     if (coordinate.xCoord <= ship.xCoord && coordinate.xCoord > ship.xCoord - ship.size) {
                         ship.currHealth -= damage;
@@ -904,13 +904,12 @@ document.addEventListener(`DOMContentLoaded`, function () {
                         console.log(`hit ${ship.name} at ${coordinate.xCoord}, ${coordinate.yCoord}`);
                     }
                 }
-
-                if (anyShipHit == true) {
-                    updateSingleSquareState(grid, coordinate, true);
-                }
-                else if (anyShipHit == false) {
-                    updateSingleSquareState(grid, coordinate, false);
-                }
+            }
+            if (anyShipHit == true) {
+                updateSingleSquareState(grid, coordinate, true);
+            }
+            else if (anyShipHit == false) {
+                updateSingleSquareState(grid, coordinate, false);
             }
         }
 
@@ -919,8 +918,8 @@ document.addEventListener(`DOMContentLoaded`, function () {
 
     // updating square states
     function updateSingleSquareState(grid, coordinate, hitShip) {
-        let squareElement = grid.querySelector(`button[name="x${coordinate.xCoord}y${coordinate.yCoord}"]`);
         if (grid != null) {
+            let squareElement = grid.querySelector(`button[name="x${coordinate.xCoord}y${coordinate.yCoord}"]`);
             if (hitShip == true) {
                 squareElement.hitState = "hitOne";
             }
